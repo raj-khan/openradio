@@ -1,10 +1,10 @@
 ---
 id: TASK-19
 title: Build home page
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 15:41'
-updated_date: '2026-09-17 16:24'
+updated_date: '2026-09-17 16:45'
 labels:
   - ui
 dependencies:
@@ -21,6 +21,12 @@ Immersive home: full-bleed atmosphere hero with discover input, FrequencyDial to
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Loads with Radio Browser data server-side
-- [ ] #2 Degrades gracefully if the provider is down
+- [x] #1 Loads with Radio Browser data server-side
+- [x] #2 Degrades gracefully if the provider is down
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Immersive home: hero whose photo crossfades as you tune the FrequencyDial across 16 cities, Tune in plays a live station from that country, search field, mood and place shelves with live station counts, most played tuner grid, provider-down fallback. Verified in Chrome at 390px and 1440px.
+<!-- SECTION:FINAL_SUMMARY:END -->

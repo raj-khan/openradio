@@ -1,0 +1,178 @@
+"use client";
+
+import { ArrowRight, Loader2, Play, Search } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, type FormEvent } from "react";
+import { FrequencyDial } from "@/components/tuner/frequency-dial";
+import { EqualizerBars } from "@/components/tuner/equalizer-bars";
+import type { Place } from "@/lib/imagery/catalog";
+import { usePlayerStore } from "@/lib/player/store";
+import { countryFlag, countryName } from "@/lib/stations/display";
+import type { Station } from "@/lib/stations/types";
+import { stationFrequency } from "@/lib/tuner/frequency";
+
+interface HeroTunerProps {
+  places: Place[];
+  counts: Record<string, number>;
+}
+
+export function HeroTuner({ places, counts }: HeroTunerProps) {
+  const router = useRouter();
+  const [index, setIndex] = useState(0);
+  const [tuning, setTuning] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const playing = usePlayerStore((s) => s.status === "playing");
+  const currentCountry = usePlayerStore((s) => s.station?.countryCode);
+
+  const place = places[index];
+  const count = counts[place.countryCode];
+  const onAir = playing && currentCountry === place.countryCode;
+
+  const tuneIn = async () => {
+    setTuning(true);
+    setMessage(null);
+    try {
+      const response = await fetch(`/api/stations?country=${place.countryCode}&limit=5`);
+      const body: { stations?: Station[] } = await response.json();
+      const candidates = (body.stations ?? []).filter((s) => s.lastCheckOk);
+      const station = candidates[Math.floor(Math.random() * Math.min(candidates.length, 5))];
+      if (!station) throw new Error("none");
+      usePlayerStore.getState().play(station);
+    } catch {
+      setMessage("Couldn't find a live station there right now. Try another place.");
+    } finally {
+      setTuning(false);
+    }
+  };
+
+  const onSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const text = query.trim();
+    router.push(text ? `/search?text=${encodeURIComponent(text)}` : "/search");
+  };
+
+  const visible = new Set([index - 1, index, index + 1]);
+
+  return (
+    <section
+      aria-label="Tune the world"
+      className="relative isolate flex min-h-[calc(100svh-3.5rem)] flex-col overflow-hidden"
+    >
+      {/* Atmosphere: current place photo crossfades as you tune. */}
+      <div className="grain absolute inset-0 -z-10" style={{ backgroundColor: place.image.color }}>
+        {places.map((p, i) =>
+          visible.has(i) ? (
+            <Image
+              key={p.slug}
+              src={p.image.src}
+              alt=""
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              className={`object-cover transition-opacity duration-1000 ${
+                i === index ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ) : null,
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+      </div>
+
+      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-end gap-8 px-4 pt-10 pb-6 sm:justify-center">
+        <div className="max-w-2xl space-y-5 text-white">
+          <p className="flex items-center gap-2 font-mono text-xs tracking-[0.25em] text-white/70 uppercase">
+            <EqualizerBars active={onAir} className="h-3" />
+            {onAir ? "On air" : "Live radio from everywhere"}
+          </p>
+          <h1 className="text-5xl leading-[0.95] font-semibold sm:text-7xl">
+            Tune the
+            <br />
+            world.
+          </h1>
+
+          <div aria-live="polite" className="space-y-1">
+            <p className="flex items-baseline gap-3">
+              <span className="font-mono text-3xl tracking-[-0.06em] text-[var(--accent-alt)] tabular-nums sm:text-4xl">
+                {stationFrequency(place.slug)}
+              </span>
+              <span className="font-mono text-xs text-white/60">MHz</span>
+            </p>
+            <p className="font-display text-2xl font-semibold sm:text-3xl">
+              <span aria-hidden="true" className="mr-2">
+                {countryFlag(place.countryCode)}
+              </span>
+              {place.city}, {countryName(place.countryCode)}
+            </p>
+            {count !== undefined && (
+              <p className="text-sm text-white/70">{count.toLocaleString("en")} live stations</p>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={tuneIn}
+              disabled={tuning}
+              className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-6 font-medium text-accent-contrast shadow-[0_0_30px_color-mix(in_oklab,var(--accent)_45%,transparent)] transition hover:scale-[1.02] disabled:opacity-70"
+            >
+              {tuning ? (
+                <Loader2 className="size-5 animate-spin" aria-hidden="true" />
+              ) : (
+                <Play className="size-5" aria-hidden="true" />
+              )}
+              Tune in to {place.city}
+            </button>
+            <Link
+              href={`/country/${place.countryCode.toLowerCase()}`}
+              className="inline-flex h-12 items-center gap-2 rounded-full border border-white/30 px-5 text-white backdrop-blur-sm hover:bg-white/10"
+            >
+              Explore stations
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </div>
+          {message && (
+            <p role="alert" className="text-sm text-[var(--accent-alt)]">
+              {message}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <FrequencyDial
+            entries={places.map((p) => ({
+              id: p.slug,
+              label: p.city,
+              sublabel: stationFrequency(p.slug),
+            }))}
+            value={index}
+            onChange={setIndex}
+            label="Tune to a city"
+            className="[&_.dial-surface]:border-white/15 [&_.dial-surface]:bg-black/45 [&_.dial-surface]:backdrop-blur-md"
+          />
+          <form role="search" onSubmit={onSearch} className="relative max-w-xl">
+            <label htmlFor="home-search" className="sr-only">
+              Search stations
+            </label>
+            <Search
+              className="pointer-events-none absolute top-1/2 left-4 z-10 size-4 -translate-y-1/2 text-white/60"
+              aria-hidden="true"
+            />
+            <input
+              id="home-search"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Or search any station by name"
+              maxLength={100}
+              className="h-12 w-full rounded-full border border-white/20 bg-black/40 pr-4 pl-11 text-white backdrop-blur-md placeholder:text-white/55 focus:border-accent focus:outline-none"
+            />
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+}

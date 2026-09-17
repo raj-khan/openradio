@@ -8,18 +8,26 @@ interface StationArtworkProps {
   className?: string;
 }
 
-/** Station favicon with a generated gradient placeholder when missing or broken. */
+/**
+ * Station favicon over a generated gradient label. The label shows while the
+ * favicon loads and stays when it is missing or broken.
+ */
 export function StationArtwork({ station, className = "size-12" }: StationArtworkProps) {
   const url = station.faviconUrl;
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const [loadedUrl, setLoadedUrl] = useState<string | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Server-rendered images can fail before hydration, when onError is not attached yet.
+  // Server-rendered images can settle before hydration, when handlers are not attached yet.
   useEffect(() => {
     const img = imgRef.current;
-    if (img && img.complete && img.naturalWidth === 0 && url) setFailedUrl(url);
+    if (!img || !url || !img.complete) return;
+    if (img.naturalWidth === 0) setFailedUrl(url);
+    else setLoadedUrl(url);
   }, [url]);
+
   const showImage = url && failedUrl !== url;
+  const loaded = showImage && loadedUrl === url;
   const hue = hueFromString(station.id);
 
   return (
@@ -27,7 +35,15 @@ export function StationArtwork({ station, className = "size-12" }: StationArtwor
       className={`relative shrink-0 overflow-hidden rounded-xl bg-surface-strong ${className}`}
       aria-hidden="true"
     >
-      {showImage ? (
+      <div
+        className="flex size-full items-center justify-center text-sm font-semibold text-white"
+        style={{
+          background: `linear-gradient(135deg, hsl(${hue} 55% 38%), hsl(${(hue + 60) % 360} 60% 28%))`,
+        }}
+      >
+        {initials(station.name)}
+      </div>
+      {showImage && (
         // External station artwork from arbitrary hosts, so next/image is not used.
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -37,18 +53,12 @@ export function StationArtwork({ station, className = "size-12" }: StationArtwor
           loading="lazy"
           decoding="async"
           referrerPolicy="no-referrer"
-          className="size-full bg-white/90 object-contain p-1"
+          className={`absolute inset-0 size-full bg-white object-contain p-1 transition-opacity duration-300 ${
+            loaded ? "opacity-100" : "opacity-0"
+          }`}
+          onLoad={() => setLoadedUrl(url)}
           onError={() => setFailedUrl(url)}
         />
-      ) : (
-        <div
-          className="flex size-full items-center justify-center text-sm font-semibold text-white"
-          style={{
-            background: `linear-gradient(135deg, hsl(${hue} 55% 38%), hsl(${(hue + 60) % 360} 60% 28%))`,
-          }}
-        >
-          {initials(station.name)}
-        </div>
       )}
     </div>
   );
