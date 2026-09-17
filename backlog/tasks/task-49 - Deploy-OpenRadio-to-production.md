@@ -30,7 +30,7 @@ Deploy to a host (Vercel by default), connect openradio.space, set environment v
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
 Deployed on Vercel with openradio.space as the domain (www primary,
-apex 308-redirects) and NEXT_PUBLIC_APP_URL set — canonical, robots and
+apex 308-redirects) and NEXT_PUBLIC_APP_URL set, so canonical, robots and
 sitemap all emit https://www.openradio.space. Production smoke tested:
 search/facet/station/click/surprise/discover APIs return 200 with data,
 HLS and MP3 streams play (valid m3u8 playlist, real MPEG audio),
