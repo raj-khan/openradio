@@ -1,9 +1,10 @@
 ---
 id: TASK-11
 title: Implement player store
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 15:41'
+updated_date: '2026-09-17 16:00'
 labels:
   - player
 dependencies:
@@ -20,6 +21,12 @@ Zustand store with explicit states (idle, loading, playing, paused, buffering, e
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 State transitions are pure and unit tested
-- [ ] #2 Volume and mute persist across reloads
+- [x] #1 State transitions are pure and unit tested
+- [x] #2 Volume and mute persist across reloads
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Pure player state machine (idle, loading, playing, paused, buffering, error) and Zustand store persisting volume and mute.
+<!-- SECTION:FINAL_SUMMARY:END -->
