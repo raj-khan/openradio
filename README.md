@@ -77,7 +77,11 @@ See [docs/architecture.md](docs/architecture.md) for the full picture and [docs/
 
 ## Roadmap
 
-Web first, then apps: macOS, Windows and Linux desktop, iOS and Android, and a Chrome extension. See [docs/roadmap.md](docs/roadmap.md).
+**Now:** the web app, installable and offline capable.
+**Next:** landing pages for genre and country pairs, structured data, a world map, sleep timer, collections and translations.
+**Later:** apps with a shared core for macOS, Windows and Linux, Android and iOS, plus a Chrome extension.
+
+Full list in [docs/roadmap.md](docs/roadmap.md). Want to lead one of the apps? Open an issue and say hello.
 
 ## Contributing
 
