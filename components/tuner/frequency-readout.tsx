@@ -9,7 +9,7 @@ interface FrequencyReadoutProps {
 const SIZES = {
   sm: "text-sm",
   md: "text-2xl",
-  xl: "text-6xl sm:text-8xl",
+  xl: "font-display text-6xl sm:text-8xl",
 } as const;
 
 /** Decorative "94.3 MHz" style readout derived from a station id. */

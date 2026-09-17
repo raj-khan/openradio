@@ -132,3 +132,13 @@ h2,
     transition-duration: 0.01ms !important;
   }
 }
+
+.disc[data-spinning="true"] {
+  animation: disc-spin 6s linear infinite;
+}
+
+@keyframes disc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

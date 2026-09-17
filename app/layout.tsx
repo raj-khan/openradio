@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { AudioEngine } from "@/components/player/audio-engine";
 import { MediaSession } from "@/components/player/media-session";
+import { NowPlayingView } from "@/components/player/now-playing-view";
 import { PlayerBar } from "@/components/player/player-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <SiteFooter />
         <PlayerBar />
+        <NowPlayingView />
         <AudioEngine />
         <MediaSession />
         <div aria-hidden="true" style={{ height: "var(--player-space)" }} />

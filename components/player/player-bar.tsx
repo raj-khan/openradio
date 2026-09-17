@@ -1,11 +1,11 @@
 "use client";
 
 import { Loader2, Pause, Play, RotateCcw, Volume2, VolumeX, X } from "lucide-react";
-import Link from "next/link";
 import { useEffect, type ReactNode } from "react";
 import { StationArtwork } from "@/components/stations/station-artwork";
 import type { PlayerStatus } from "@/lib/player/machine";
 import { usePlayerStore } from "@/lib/player/store";
+import { useNowPlayingView } from "@/lib/player/view-store";
 import { countryFlag } from "@/lib/stations/display";
 
 const PLAYER_SPACE = "5.5rem";
@@ -55,9 +55,12 @@ export function PlayerBar({ nowPlaying }: { nowPlaying?: ReactNode }) {
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <div className="mx-auto flex h-[5.5rem] w-full max-w-6xl items-center gap-3 px-4">
-            <Link
-              href={`/station/${station.id}`}
-              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg"
+            <button
+              type="button"
+              onClick={useNowPlayingView.getState().show}
+              aria-label={`Open now playing: ${station.name}`}
+              aria-haspopup="dialog"
+              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg text-left"
             >
               <StationArtwork station={station} className="size-12" />
               <div className="min-w-0">
@@ -82,7 +85,7 @@ export function PlayerBar({ nowPlaying }: { nowPlaying?: ReactNode }) {
                   )}
                 </p>
               </div>
-            </Link>
+            </button>
 
             <div className="flex items-center gap-1 sm:gap-2">
               <div className="hidden items-center gap-2 sm:flex">

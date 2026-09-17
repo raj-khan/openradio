@@ -1,9 +1,10 @@
 ---
 id: TASK-41
 title: Add full-screen now playing view
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 16:24'
+updated_date: '2026-09-17 16:51'
 labels:
   - design
 dependencies:
@@ -21,6 +22,12 @@ Expandable now playing sheet from the player bar with atmosphere photo, frequenc
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Opens from player bar and closes with Escape
-- [ ] #2 Focus is trapped while open and restored on close
+- [x] #1 Opens from player bar and closes with Escape
+- [x] #2 Focus is trapped while open and restored on close
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Full-screen now playing dialog opened from the player bar: blurred atmosphere photo matched to mood or country, spinning record with station artwork label, large frequency, controls, volume, station and website links, photo credit. Focus trapped, Escape closes, focus restored, body scroll locked. Verified at 390px and 1440px.
+<!-- SECTION:FINAL_SUMMARY:END -->
