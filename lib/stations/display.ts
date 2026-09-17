@@ -34,7 +34,7 @@ export function countryName(code?: string, fallback?: string): string | undefine
       }
     }
     const name = regionNames?.of(code.toUpperCase());
-    if (name && name.toUpperCase() !== code.toUpperCase()) return name;
+    if (name && name !== "Unknown Region" && name.toUpperCase() !== code.toUpperCase()) return name;
   }
   return fallback;
 }
