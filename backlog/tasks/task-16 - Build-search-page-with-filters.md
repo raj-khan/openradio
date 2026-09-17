@@ -1,9 +1,10 @@
 ---
 id: TASK-16
 title: Build search page with filters
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 15:41'
+updated_date: '2026-09-17 16:18'
 labels:
   - ui
 dependencies:
@@ -22,6 +23,12 @@ ordinal: 16000
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Filters persist in the URL and survive reload
-- [ ] #2 Empty and error states shown
+- [x] #1 Filters persist in the URL and survive reload
+- [x] #2 Empty and error states shown
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Server-rendered /search with URL-synced filters (text, country, language, tag datalist, sort), load more via API, invalid/empty/error states. Verified in Chrome including typing during a pending navigation.
+<!-- SECTION:FINAL_SUMMARY:END -->
