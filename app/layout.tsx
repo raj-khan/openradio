@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { AudioEngine } from "@/components/player/audio-engine";
 import { LibraryHydrator } from "@/components/library/library-hydrator";
 import { MediaSession } from "@/components/player/media-session";
+import { NowPlayingPoller } from "@/components/player/now-playing-poller";
 import { NowPlayingView } from "@/components/player/now-playing-view";
 import { PlayerBar } from "@/components/player/player-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <NowPlayingView />
         <AudioEngine />
         <MediaSession />
+        <NowPlayingPoller />
         <LibraryHydrator />
         <div aria-hidden="true" style={{ height: "var(--player-space)" }} />
       </body>

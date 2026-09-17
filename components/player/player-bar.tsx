@@ -1,12 +1,13 @@
 "use client";
 
 import { Loader2, Pause, Play, RotateCcw, Volume2, VolumeX, X } from "lucide-react";
-import { useEffect, type ReactNode } from "react";
+import { useEffect } from "react";
 import { FavoriteButton } from "@/components/library/favorite-button";
 import { StationArtwork } from "@/components/stations/station-artwork";
 import { EqualizerBars } from "@/components/tuner/equalizer-bars";
 import { FrequencyReadout } from "@/components/tuner/frequency-readout";
 import type { PlayerStatus } from "@/lib/player/machine";
+import { useNowPlayingTitle } from "@/lib/now-playing/store";
 import { usePlayerStore } from "@/lib/player/store";
 import { useNowPlayingView } from "@/lib/player/view-store";
 import { countryFlag } from "@/lib/stations/display";
@@ -22,8 +23,9 @@ const STATUS_TEXT: Record<PlayerStatus, string> = {
   error: "",
 };
 
-export function PlayerBar({ nowPlaying }: { nowPlaying?: ReactNode }) {
+export function PlayerBar() {
   const station = usePlayerStore((s) => s.station);
+  const nowPlaying = useNowPlayingTitle(station?.id);
   const status = usePlayerStore((s) => s.status);
   const error = usePlayerStore((s) => s.error);
   const volume = usePlayerStore((s) => s.volume);
@@ -102,7 +104,13 @@ export function PlayerBar({ nowPlaying }: { nowPlaying?: ReactNode }) {
                   {status === "error" ? (
                     <span className="text-accent-alt">{error}</span>
                   ) : (
-                    <>{nowPlaying && status === "playing" ? nowPlaying : STATUS_TEXT[status]}</>
+                    <span
+                      data-testid={
+                        nowPlaying && status === "playing" ? "player-now-playing" : undefined
+                      }
+                    >
+                      {nowPlaying && status === "playing" ? nowPlaying : STATUS_TEXT[status]}
+                    </span>
                   )}
                 </p>
               </div>

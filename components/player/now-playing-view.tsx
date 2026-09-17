@@ -20,14 +20,16 @@ import { EqualizerBars } from "@/components/tuner/equalizer-bars";
 import { FrequencyReadout } from "@/components/tuner/frequency-readout";
 import { useFocusTrap } from "@/lib/hooks/use-focus-trap";
 import { atmosphereFor } from "@/lib/imagery/atmosphere";
+import { useNowPlayingTitle } from "@/lib/now-playing/store";
 import { usePlayerStore } from "@/lib/player/store";
 import { useNowPlayingView } from "@/lib/player/view-store";
 import { countryFlag, countryName, primaryTag } from "@/lib/stations/display";
 
-export function NowPlayingView({ nowPlaying = null }: { nowPlaying?: string | null }) {
+export function NowPlayingView() {
   const open = useNowPlayingView((s) => s.open);
   const hide = useNowPlayingView((s) => s.hide);
   const station = usePlayerStore((s) => s.station);
+  const nowPlaying = useNowPlayingTitle(station?.id);
   const status = usePlayerStore((s) => s.status);
   const error = usePlayerStore((s) => s.error);
   const volume = usePlayerStore((s) => s.volume);

@@ -2,11 +2,13 @@
 
 import { useEffect } from "react";
 import { buildMediaMetadata, mediaPlaybackState } from "@/lib/player/media-session";
+import { useNowPlayingTitle } from "@/lib/now-playing/store";
 import { usePlayerStore } from "@/lib/player/store";
 
 /** Keeps the OS media controls (lock screen, media keys) in sync with the player. */
-export function MediaSession({ nowPlaying = null }: { nowPlaying?: string | null }) {
+export function MediaSession() {
   const station = usePlayerStore((s) => s.station);
+  const nowPlaying = useNowPlayingTitle(station?.id);
   const status = usePlayerStore((s) => s.status);
 
   useEffect(() => {
