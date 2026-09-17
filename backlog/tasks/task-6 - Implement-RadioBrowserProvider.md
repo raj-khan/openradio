@@ -1,9 +1,10 @@
 ---
 id: TASK-6
 title: Implement RadioBrowserProvider
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 15:40'
+updated_date: '2026-09-17 15:49'
 labels:
   - stations
 dependencies:
@@ -21,8 +22,14 @@ StationProvider implementation on top of the client and normalizer: search with 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Search always hides broken stations
-- [ ] #2 Order options map to Radio Browser parameters
-- [ ] #3 Facets are normalized and sorted by station count
-- [ ] #4 Unit tests for query mapping
+- [x] #1 Search always hides broken stations
+- [x] #2 Order options map to Radio Browser parameters
+- [x] #3 Facets are normalized and sorted by station count
+- [x] #4 Unit tests for query mapping
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+RadioBrowserProvider implements search, getById, countries, languages, tags and reportClick with caching per data type; getStationProvider singleton.
+<!-- SECTION:FINAL_SUMMARY:END -->
