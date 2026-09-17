@@ -3,6 +3,8 @@ import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { AudioEngine } from "@/components/player/audio-engine";
 import { LibraryHydrator } from "@/components/library/library-hydrator";
 import { MediaSession } from "@/components/player/media-session";
+import { AmbientBackground } from "@/components/vibe/ambient-background";
+import { VibeController } from "@/components/vibe/vibe-controller";
 import { NowPlayingPoller } from "@/components/player/now-playing-poller";
 import { NowPlayingView } from "@/components/player/now-playing-view";
 import { PlayerBar } from "@/components/player/player-bar";
@@ -51,6 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <AmbientBackground />
         <SiteHeader />
         <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-none">
           {children}
@@ -61,6 +64,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <AudioEngine />
         <MediaSession />
         <NowPlayingPoller />
+        <VibeController />
         <LibraryHydrator />
         <div aria-hidden="true" style={{ height: "var(--player-space)" }} />
       </body>

@@ -30,6 +30,8 @@ describe("vibeFor", () => {
     [["blues"], "melancholic"],
     [["ambient", "space"], "mysterious"],
     [["bossa nova"], "romantic"],
+    [["1930", "1940", "1950", "big band", "classic hits", "jazz"], "nostalgic"],
+    [["classic hits"], "nostalgic"],
     [["généraliste"], "neutral"],
     [[], "neutral"],
   ])("%j -> %s", (tags, mood) => {

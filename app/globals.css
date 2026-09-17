@@ -1,5 +1,60 @@
 @import "tailwindcss";
 
+/* Registered so theme changes from the vibe engine crossfade smoothly. */
+@property --background {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0a0908;
+}
+
+@property --surface {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #16130f;
+}
+
+@property --surface-strong {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #211c16;
+}
+
+@property --border {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #3a3128;
+}
+
+@property --text {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f4ede4;
+}
+
+@property --muted {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #a89c8d;
+}
+
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ff5a2c;
+}
+
+@property --accent-alt {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ffb347;
+}
+
+@property --accent-contrast {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0a0908;
+}
+
 /*
  * Atlas Tuner theme tokens (see docs/design.md). The vibe engine may override
  * accents at runtime, so components use token utilities only.
@@ -16,6 +71,16 @@
   --accent-contrast: #0a0908;
   --player-space: 0px;
   color-scheme: dark;
+  transition:
+    --background 1.2s ease,
+    --surface 1.2s ease,
+    --surface-strong 1.2s ease,
+    --border 1.2s ease,
+    --text 1.2s ease,
+    --muted 1.2s ease,
+    --accent 1.2s ease,
+    --accent-alt 1.2s ease,
+    --accent-contrast 1.2s ease;
 }
 
 @theme inline {
@@ -34,17 +99,18 @@
   --radius-tile: 1.5rem;
 }
 
-html,
-body {
+/* Only html paints the page color, so the ambient layer can show through body. */
+html {
   background: var(--background);
   color: var(--text);
 }
 
 body {
+  color: var(--text);
+}
+
+body {
   font-family: var(--font-sans), system-ui, sans-serif;
-  transition:
-    background-color 1s ease,
-    color 1s ease;
 }
 
 h1,
@@ -140,5 +206,58 @@ h2,
 @keyframes disc-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+.ambient-blob {
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.16;
+  animation: ambient-drift 38s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+.ambient-blob-a {
+  top: -30vmax;
+  left: -20vmax;
+  background: radial-gradient(circle, var(--accent), transparent 65%);
+}
+
+.ambient-blob-b {
+  right: -25vmax;
+  bottom: -35vmax;
+  background: radial-gradient(circle, var(--accent-alt), transparent 65%);
+  animation-delay: -12s;
+}
+
+html[data-playing="true"] .ambient-blob {
+  animation-play-state: running;
+}
+
+html[data-animation="none"] .ambient-blob {
+  animation: none;
+}
+
+html[data-animation="slow"] .ambient-blob {
+  animation-duration: 60s;
+}
+
+html[data-animation="dynamic"] .ambient-blob {
+  animation-duration: 16s;
+  opacity: 0.22;
+}
+
+@keyframes ambient-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(12vmax, 8vmax, 0) scale(1.15);
+  }
+  100% {
+    transform: translate3d(-6vmax, 14vmax, 0) scale(0.95);
   }
 }

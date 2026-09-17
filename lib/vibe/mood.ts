@@ -144,11 +144,20 @@ export function vibeFor(tags: string[], nowPlaying?: string | null): Vibe {
   const scores = new Map<Mood, number>();
   tags.slice(0, 8).forEach((tag, index) => {
     const text = tag.toLowerCase();
+    // Decades such as "1950", "1950s" or "80s" read as nostalgic.
+    const decade = /^(19[0-9]0|[0-9]0)s?$/.test(text);
+    // Each tag counts once, for its most specific (longest) matching phrase.
+    let match: { mood: Mood; length: number } | null = decade
+      ? { mood: "nostalgic", length: 99 }
+      : null;
     for (const rule of RULES) {
-      if (rule.words.some((word) => matches(text, word))) {
-        scores.set(rule.mood, (scores.get(rule.mood) ?? 0) + (8 - index));
+      for (const word of rule.words) {
+        if (matches(text, word) && (!match || word.length > match.length)) {
+          match = { mood: rule.mood, length: word.length };
+        }
       }
     }
+    if (match) scores.set(match.mood, (scores.get(match.mood) ?? 0) + (8 - index));
   });
   if (nowPlaying) {
     const text = nowPlaying.toLowerCase().replace(/[^\p{L}\p{N}&\s-]+/gu, " ");
