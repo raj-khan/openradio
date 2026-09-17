@@ -9,7 +9,7 @@ export async function generateMetadata({
   params,
 }: PageProps<"/country/[code]">): Promise<Metadata> {
   const country = parseCountrySegment((await params).code);
-  if (!country) return { title: "Country" };
+  if (!country) return { title: "Off the dial" };
   return {
     title: `Radio from ${country.name}`,
     description: `Listen to live radio stations from ${country.name}.`,

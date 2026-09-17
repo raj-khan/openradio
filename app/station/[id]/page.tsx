@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { StaticScreen, secondaryAction } from "@/components/feedback/static-screen";
 import { FavoriteButton } from "@/components/library/favorite-button";
 import { PlayButton } from "@/components/stations/play-button";
 import { StationArtwork } from "@/components/stations/station-artwork";
@@ -15,6 +16,7 @@ import { loadSimilarStations, loadStation } from "@/lib/stations/server-data";
 export async function generateMetadata({ params }: PageProps<"/station/[id]">): Promise<Metadata> {
   const { id } = await params;
   const result = await loadStation(id);
+  if (result.status === "missing") return { title: "Off the dial" };
   if (result.status !== "found") return { title: "Station" };
   const { station } = result;
   const country = countryName(station.countryCode, station.country);
@@ -33,12 +35,16 @@ export default async function StationPage({ params }: PageProps<"/station/[id]">
   if (result.status === "missing") notFound();
   if (result.status === "error") {
     return (
-      <div className="mx-auto w-full max-w-3xl px-4 py-24 text-center">
-        <h1 className="text-3xl font-semibold">Signal lost</h1>
-        <p className="mt-3 text-muted">
-          The station directory isn&apos;t responding right now. Please try again shortly.
-        </p>
-      </div>
+      <StaticScreen
+        readout="000.0"
+        eyebrow="Signal lost"
+        title="Station directory unreachable"
+        message="We couldn't reach the station directory right now. Please try again shortly."
+      >
+        <Link href="/" className={secondaryAction}>
+          Back to the tuner
+        </Link>
+      </StaticScreen>
     );
   }
 

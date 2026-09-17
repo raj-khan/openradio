@@ -8,7 +8,7 @@ export async function generateMetadata({
   params,
 }: PageProps<"/language/[name]">): Promise<Metadata> {
   const language = parseTermSegment((await params).name);
-  if (!language) return { title: "Language" };
+  if (!language) return { title: "Off the dial" };
   return {
     title: `${titleCase(language)} radio`,
     description: `Listen to live radio stations broadcasting in ${titleCase(language)}.`,

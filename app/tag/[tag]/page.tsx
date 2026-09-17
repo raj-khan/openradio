@@ -6,7 +6,7 @@ import { parseTermSegment, titleCase } from "@/lib/stations/browse";
 
 export async function generateMetadata({ params }: PageProps<"/tag/[tag]">): Promise<Metadata> {
   const tag = parseTermSegment((await params).tag);
-  if (!tag) return { title: "Tag" };
+  if (!tag) return { title: "Off the dial" };
   const mood = moodForTag(tag);
   return {
     title: `${mood && mood.primaryTag === tag ? mood.label : titleCase(tag)} radio`,
