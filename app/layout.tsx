@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AudioEngine } from "@/components/player/audio-engine";
+import { MediaSession } from "@/components/player/media-session";
 import { PlayerBar } from "@/components/player/player-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteFooter />
         <PlayerBar />
         <AudioEngine />
+        <MediaSession />
         <div aria-hidden="true" style={{ height: "var(--player-space)" }} />
       </body>
     </html>
