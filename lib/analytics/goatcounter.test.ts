@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   countPixelUrl,
   fetchVisitTotals,
@@ -73,5 +73,30 @@ describe("formatVisits", () => {
     expect(formatVisits(12_345)).toBe("12.3k");
     expect(formatVisits(250_000)).toBe("250k");
     expect(formatVisits(2_500_000)).toBe("2.5m");
+  });
+});
+
+describe("fetchVisitTotals with a stubbed endpoint", () => {
+  it("reads the public totals endpoint and caches it", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify({ count: "12,345", count_unique: "9,001" }), { status: 200 }),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+    await expect(fetchVisitTotals("https://openradio.goatcounter.com")).resolves.toEqual({
+      count: 12345,
+      unique: 9001,
+    });
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe("https://openradio.goatcounter.com/counter/TOTAL.json");
+    expect(init.next).toEqual({ revalidate: 3600 });
+    vi.unstubAllGlobals();
+  });
+
+  it("returns null on a failed response", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("nope", { status: 500 })));
+    await expect(fetchVisitTotals("https://openradio.goatcounter.com")).resolves.toBeNull();
+    vi.unstubAllGlobals();
   });
 });
