@@ -1,9 +1,10 @@
 ---
 id: TASK-4
 title: Implement station normalizer
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 15:40'
+updated_date: '2026-09-17 15:46'
 labels:
   - stations
 dependencies:
@@ -20,7 +21,13 @@ Convert raw Radio Browser station JSON into the internal Station model. Trim, sp
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Handles missing and malformed fields without throwing
-- [ ] #2 Detects HLS streams
-- [ ] #3 Unit tests cover edge cases
+- [x] #1 Handles missing and malformed fields without throwing
+- [x] #2 Detects HLS streams
+- [x] #3 Unit tests cover edge cases
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Normalizer converts raw Radio Browser stations and facets into internal models, rejecting unusable stations; unit tested.
+<!-- SECTION:FINAL_SUMMARY:END -->
