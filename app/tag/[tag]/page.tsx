@@ -11,6 +11,7 @@ export async function generateMetadata({ params }: PageProps<"/tag/[tag]">): Pro
   return {
     title: `${mood && mood.primaryTag === tag ? mood.label : titleCase(tag)} radio`,
     description: `Listen to live ${tag} radio stations from around the world.`,
+    alternates: { canonical: `/tag/${encodeURIComponent(tag)}` },
   };
 }
 
@@ -21,8 +22,12 @@ export default async function TagPage({ params }: PageProps<"/tag/[tag]">) {
   const mood = moodForTag(tag);
   const isMood = mood?.primaryTag === tag;
 
+  const path = `/tag/${encodeURIComponent(tag)}`;
+
   return (
     <BrowsePage
+      path={path}
+      breadcrumb={[{ name: isMood && mood ? mood.label : titleCase(tag), path }]}
       eyebrow={isMood ? "Mood" : "Genre and tag"}
       title={isMood && mood ? mood.label : titleCase(tag)}
       subtitle={

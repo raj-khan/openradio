@@ -14,6 +14,7 @@ export async function generateMetadata({
   return {
     title: `Radio from ${country.name}`,
     description: `Listen to live radio stations from ${country.name}.`,
+    alternates: { canonical: `/country/${country.code.toLowerCase()}` },
   };
 }
 
@@ -25,7 +26,10 @@ export default async function CountryPage({ params }: PageProps<"/country/[code]
 
   return (
     <BrowsePage
+      path={`/country/${country.code.toLowerCase()}`}
+      breadcrumb={[{ name: country.name, path: `/country/${country.code.toLowerCase()}` }]}
       eyebrow={place ? `Tuned to ${place.city}` : "Country"}
+      listName={`Radio from ${country.name}`}
       title={
         <>
           <span aria-hidden="true" className="mr-3">

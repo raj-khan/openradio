@@ -6,6 +6,7 @@ import { REPO_URL, SITE_DESCRIPTION } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description: SITE_DESCRIPTION,
+  alternates: { canonical: "/about" },
 };
 
 const SECTIONS = [

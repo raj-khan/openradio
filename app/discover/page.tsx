@@ -9,6 +9,7 @@ import { runDiscover } from "@/lib/discover/run";
 export const metadata: Metadata = {
   title: "Discover",
   description: "Describe what you want to hear and tune in to matching live radio.",
+  alternates: { canonical: "/discover" },
 };
 
 const RELAXED: Record<string, string> = {

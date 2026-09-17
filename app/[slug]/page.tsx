@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import { JsonLd } from "@/components/seo/json-ld";
 import { StationGrid } from "@/components/stations/station-grid";
 import { HERO_IMAGE, moodBySlug, placeForCountry } from "@/lib/imagery/catalog";
 import {
@@ -13,6 +14,7 @@ import {
   relatedGenres,
   type Combo,
 } from "@/lib/seo/combos";
+import { breadcrumbJsonLd, stationListJsonLd } from "@/lib/seo/structured-data";
 import { countryFlag } from "@/lib/stations/display";
 import { loadStations } from "@/lib/stations/server-data";
 
@@ -53,8 +55,20 @@ export default async function ComboPage({ params }: PageProps<"/[slug]">) {
     HERO_IMAGE;
   const flag = countryFlag(combo.countryCode);
 
+  const title = `${combo.genre.label} radio in ${combo.countryName}`;
+
   return (
     <div className="flex flex-col gap-10 pb-16">
+      <JsonLd
+        data={[
+          stationListJsonLd(title, `/${combo.slug}`, stations),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: combo.countryName, path: `/country/${combo.countryCode.toLowerCase()}` },
+            { name: title, path: `/${combo.slug}` },
+          ]),
+        ]}
+      />
       <section className="relative isolate overflow-hidden">
         <div className="grain absolute inset-0 -z-10" style={{ backgroundColor: image.color }}>
           <Image src={image.src} alt="" fill priority sizes="100vw" className="object-cover" />

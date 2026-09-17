@@ -4,12 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StaticScreen, secondaryAction } from "@/components/feedback/static-screen";
+import { JsonLd } from "@/components/seo/json-ld";
 import { FavoriteButton } from "@/components/library/favorite-button";
 import { PlayButton } from "@/components/stations/play-button";
 import { StationArtwork } from "@/components/stations/station-artwork";
 import { StationGrid } from "@/components/stations/station-grid";
 import { FrequencyReadout } from "@/components/tuner/frequency-readout";
 import { atmosphereFor } from "@/lib/imagery/atmosphere";
+import { breadcrumbJsonLd, stationJsonLd } from "@/lib/seo/structured-data";
 import { countryFlag, countryName, primaryTag } from "@/lib/stations/display";
 import { loadSimilarStations, loadStation } from "@/lib/stations/server-data";
 
@@ -24,6 +26,7 @@ export async function generateMetadata({ params }: PageProps<"/station/[id]">): 
   return {
     title: country ? `${station.name} (${country})` : station.name,
     description,
+    alternates: { canonical: `/station/${station.id}` },
     openGraph: { title: station.name, description },
   };
 }
@@ -63,6 +66,18 @@ export default async function StationPage({ params }: PageProps<"/station/[id]">
 
   return (
     <div className="flex flex-col gap-14 pb-16">
+      <JsonLd
+        data={[
+          stationJsonLd(station),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            ...(station.countryCode && country
+              ? [{ name: country, path: `/country/${station.countryCode.toLowerCase()}` }]
+              : []),
+            { name: station.name, path: `/station/${station.id}` },
+          ]),
+        ]}
+      />
       <section className="relative isolate overflow-hidden">
         <div className="grain absolute inset-0 -z-10" style={{ backgroundColor: image.color }}>
           <Image src={image.src} alt="" fill priority sizes="100vw" className="object-cover" />

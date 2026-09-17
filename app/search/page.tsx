@@ -8,6 +8,7 @@ import { parseStationQuery } from "@/lib/stations/types";
 export const metadata: Metadata = {
   title: "Search stations",
   description: "Search live radio stations by name, country, language and genre.",
+  alternates: { canonical: "/search" },
 };
 
 const PAGE_SIZE = 30;

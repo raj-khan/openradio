@@ -6,6 +6,7 @@ import { LibraryHydrator } from "@/components/library/library-hydrator";
 import { MediaSession } from "@/components/player/media-session";
 import { OfflineNotice } from "@/components/pwa/offline-notice";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
+import { JsonLd } from "@/components/seo/json-ld";
 import { AmbientBackground } from "@/components/vibe/ambient-background";
 import { VibeController } from "@/components/vibe/vibe-controller";
 import { NowPlayingPoller } from "@/components/player/now-playing-poller";
@@ -13,6 +14,7 @@ import { NowPlayingView } from "@/components/player/now-playing-view";
 import { PlayerBar } from "@/components/player/player-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { websiteJsonLd } from "@/lib/seo/structured-data";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -89,6 +91,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <JsonLd data={websiteJsonLd()} />
         <AmbientBackground />
         <SiteHeader />
         <OfflineNotice />

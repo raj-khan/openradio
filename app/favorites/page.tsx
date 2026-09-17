@@ -3,6 +3,8 @@ import { FavoritesList } from "@/components/library/favorites-list";
 import { LibraryPage } from "@/components/library/library-page";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/favorites" },
+  robots: { index: false, follow: true },
   title: "Favorites",
   description: "Your saved radio stations, stored on this device.",
 };

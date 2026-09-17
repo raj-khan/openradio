@@ -12,6 +12,7 @@ export async function generateMetadata({
   return {
     title: `${titleCase(language)} radio`,
     description: `Listen to live radio stations broadcasting in ${titleCase(language)}.`,
+    alternates: { canonical: `/language/${encodeURIComponent(language)}` },
   };
 }
 
@@ -19,8 +20,12 @@ export default async function LanguagePage({ params }: PageProps<"/language/[nam
   const language = parseTermSegment((await params).name);
   if (!language) notFound();
 
+  const path = `/language/${encodeURIComponent(language)}`;
+
   return (
     <BrowsePage
+      path={path}
+      breadcrumb={[{ name: `${titleCase(language)} radio`, path }]}
       eyebrow="Language"
       title={titleCase(language)}
       subtitle={`Stations broadcasting in ${titleCase(language)}, from everywhere it is spoken.`}

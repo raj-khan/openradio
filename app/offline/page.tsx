@@ -4,6 +4,7 @@ import { StaticScreen, primaryAction, secondaryAction } from "@/components/feedb
 
 export const metadata: Metadata = {
   title: "Offline",
+  alternates: { canonical: "/offline" },
   robots: { index: false },
 };
 

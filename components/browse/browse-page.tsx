@@ -2,8 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { SearchResults } from "@/components/search/search-results";
+import { JsonLd } from "@/components/seo/json-ld";
 import { StationGrid } from "@/components/stations/station-grid";
 import type { CatalogImage } from "@/lib/imagery/catalog";
+import { breadcrumbJsonLd, stationListJsonLd } from "@/lib/seo/structured-data";
 import type { StationFilters } from "@/lib/stations/query-string";
 import { filtersToQueryString } from "@/lib/stations/query-string";
 import { loadStations } from "@/lib/stations/server-data";
@@ -11,8 +13,14 @@ import { loadStations } from "@/lib/stations/server-data";
 const PAGE_SIZE = 30;
 
 interface BrowsePageProps {
+  /** Canonical path, also used for structured data. */
+  path: string;
+  /** Trail after Home for breadcrumbs. */
+  breadcrumb: { name: string; path: string }[];
   eyebrow: string;
   title: ReactNode;
+  /** Plain text name for structured data when the title is rich text. */
+  listName?: string;
   subtitle?: string;
   image: CatalogImage;
   filters: StationFilters;
@@ -20,8 +28,11 @@ interface BrowsePageProps {
 }
 
 export async function BrowsePage({
+  path,
+  breadcrumb,
   eyebrow,
   title,
+  listName,
   subtitle,
   image,
   filters,
@@ -29,8 +40,20 @@ export async function BrowsePage({
 }: BrowsePageProps) {
   const result = await loadStations({ ...filters, limit: PAGE_SIZE });
 
+  const stations = result.ok ? result.data : [];
+
   return (
     <div className="flex flex-col gap-10 pb-16">
+      <JsonLd
+        data={[
+          stationListJsonLd(
+            listName ?? (typeof title === "string" ? title : eyebrow),
+            path,
+            stations,
+          ),
+          breadcrumbJsonLd([{ name: "Home", path: "/" }, ...breadcrumb]),
+        ]}
+      />
       <section className="relative isolate overflow-hidden">
         <div className="grain absolute inset-0 -z-10" style={{ backgroundColor: image.color }}>
           <Image src={image.src} alt="" fill priority sizes="100vw" className="object-cover" />
