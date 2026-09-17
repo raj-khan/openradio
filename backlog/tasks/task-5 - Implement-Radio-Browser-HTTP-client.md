@@ -1,9 +1,10 @@
 ---
 id: TASK-5
 title: Implement Radio Browser HTTP client
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 15:40'
+updated_date: '2026-09-17 15:48'
 labels:
   - stations
 dependencies:
@@ -20,8 +21,14 @@ Server-only client for the Radio Browser API: mirror list resolution with fallba
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Base URL overridable via RADIO_BROWSER_BASE_URL
-- [ ] #2 Requests time out after 8 seconds
-- [ ] #3 Retries once on a different mirror
-- [ ] #4 Unit tests with mocked fetch
+- [x] #1 Base URL overridable via RADIO_BROWSER_BASE_URL
+- [x] #2 Requests time out after 8 seconds
+- [x] #3 Retries once on a different mirror
+- [x] #4 Unit tests with mocked fetch
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Server-only Radio Browser client with mirror resolution, fallback, User-Agent, 8s timeout, single retry on another mirror and Next.js revalidation.
+<!-- SECTION:FINAL_SUMMARY:END -->
