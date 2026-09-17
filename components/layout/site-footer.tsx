@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { VisitTotal } from "@/components/analytics/visit-total";
 
 export function SiteFooter() {
   return (
@@ -16,19 +18,24 @@ export function SiteFooter() {
           </a>
           . Streams belong to their stations.
         </p>
-        <nav aria-label="Footer" className="flex gap-4">
-          <Link href="/about" className="hover:text-text">
-            About
-          </Link>
-          <a
-            href="https://github.com/raj-khan/openradio"
-            className="hover:text-text"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Source
-          </a>
-        </nav>
+        <div className="flex items-center gap-4">
+          <Suspense fallback={null}>
+            <VisitTotal />
+          </Suspense>
+          <nav aria-label="Footer" className="flex gap-4">
+            <Link href="/about" className="hover:text-text">
+              About
+            </Link>
+            <a
+              href="https://github.com/raj-khan/openradio"
+              className="hover:text-text"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </nav>
+        </div>
       </div>
     </footer>
   );

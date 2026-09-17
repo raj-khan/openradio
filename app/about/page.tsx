@@ -20,7 +20,7 @@ const SECTIONS = [
   },
   {
     title: "Your privacy",
-    body: "No accounts and no tracking. Favorites and listening history are stored only in your browser. When now playing information is shown, our server reads the station's public stream metadata for you.",
+    body: "No accounts and no tracking. Favorites and listening history are stored only in your browser. When now playing information is shown, our server reads the station's public stream metadata for you. If a visit counter is switched on, it counts page views only, with no cookies and no personal data, and its numbers are public.",
   },
   {
     title: "Culture and faith",
