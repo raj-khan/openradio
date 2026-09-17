@@ -4,6 +4,8 @@ import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { AudioEngine } from "@/components/player/audio-engine";
 import { LibraryHydrator } from "@/components/library/library-hydrator";
 import { MediaSession } from "@/components/player/media-session";
+import { OfflineNotice } from "@/components/pwa/offline-notice";
+import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 import { AmbientBackground } from "@/components/vibe/ambient-background";
 import { VibeController } from "@/components/vibe/vibe-controller";
 import { NowPlayingPoller } from "@/components/player/now-playing-poller";
@@ -85,6 +87,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <AmbientBackground />
         <SiteHeader />
+        <OfflineNotice />
         <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-none">
           {children}
         </main>
@@ -95,6 +98,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <MediaSession />
         <NowPlayingPoller />
         <VibeController />
+        <ServiceWorkerRegistration />
         <LibraryHydrator />
         <div aria-hidden="true" style={{ height: "var(--player-space)" }} />
       </body>
