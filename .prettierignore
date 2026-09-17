@@ -3,3 +3,5 @@ node_modules
 package-lock.json
 backlog
 docs
+test-results
+playwright-report

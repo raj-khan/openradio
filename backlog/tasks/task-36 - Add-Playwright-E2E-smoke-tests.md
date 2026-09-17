@@ -1,9 +1,10 @@
 ---
 id: TASK-36
 title: Add Playwright E2E smoke tests
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 15:41'
+updated_date: '2026-09-17 18:22'
 labels:
   - testing
 dependencies:
@@ -20,5 +21,11 @@ E2E tests with mocked station API: home loads, search filters, station page, pla
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Runs locally via npm run test:e2e
+- [x] #1 Runs locally via npm run test:e2e
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Playwright suite (8 specs, desktop plus mobile project) against a mock Radio Browser and silent audio stream started by Playwright: home, keyboard dial, URL-synced search, station page, play/pause/close, favorites persistence, discovery, 404. Added to CI.
+<!-- SECTION:FINAL_SUMMARY:END -->
