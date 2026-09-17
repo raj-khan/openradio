@@ -1,9 +1,10 @@
 ---
 id: TASK-10
 title: Build app shell layout
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 15:41'
+updated_date: '2026-09-17 15:57'
 labels:
   - ui
 dependencies:
@@ -20,7 +21,13 @@ Root layout with header navigation, theme tokens as CSS variables, dark-first de
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Responsive at 360px and desktop widths
-- [ ] #2 Skip-to-content link
-- [ ] #3 Theme tokens defined as CSS custom properties
+- [x] #1 Responsive at 360px and desktop widths
+- [x] #2 Skip-to-content link
+- [x] #3 Theme tokens defined as CSS custom properties
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Root layout with sticky header nav (icons on mobile, labels on desktop), footer with Radio Browser attribution, theme tokens as CSS variables mapped into Tailwind, skip link, reduced-motion defaults and player spacer.
+<!-- SECTION:FINAL_SUMMARY:END -->
