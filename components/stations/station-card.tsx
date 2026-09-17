@@ -15,7 +15,7 @@ export function StationCard({ station, actions }: StationCardProps) {
   const subtitle = stationSubtitle(station);
 
   return (
-    <article className="group relative flex items-center gap-3 rounded-2xl border border-border/60 bg-surface/70 p-3 transition-colors hover:border-border hover:bg-surface">
+    <article className="group relative flex items-center gap-3 rounded-[var(--radius-tile)] border border-border/60 bg-surface/70 p-3 transition-colors hover:border-border hover:bg-surface">
       <StationArtwork station={station} className="size-14" />
       <div className="min-w-0 flex-1">
         <h3 className="truncate font-medium">

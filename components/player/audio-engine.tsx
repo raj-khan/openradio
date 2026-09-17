@@ -12,6 +12,7 @@ import {
   shouldRetry,
   sourceStrategy,
 } from "@/lib/player/engine-utils";
+import { useHistory } from "@/lib/library/history";
 import { usePlayerStore } from "@/lib/player/store";
 import type { Station } from "@/lib/stations/types";
 
@@ -169,6 +170,7 @@ export function AudioEngine() {
       state.dispatch({ type: "PLAYING" });
       if (state.station && reportedRef.current !== state.session) {
         reportedRef.current = state.session;
+        useHistory.getState().record(state.station);
         void fetch(`/api/stations/${state.station.id}/click`, {
           method: "POST",
           keepalive: true,

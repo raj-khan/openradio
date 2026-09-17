@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { useFavorites } from "@/lib/library/favorites";
+import { useHistory } from "@/lib/library/history";
 
 type PersistedStore = {
   persist: {
@@ -11,7 +12,7 @@ type PersistedStore = {
   };
 };
 
-export const LIBRARY_STORES: PersistedStore[] = [useFavorites];
+export const LIBRARY_STORES: PersistedStore[] = [useFavorites, useHistory];
 
 /** True once the given persisted store has loaded from localStorage. */
 export function useHydrated(store: PersistedStore) {

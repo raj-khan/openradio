@@ -1,9 +1,10 @@
 ---
 id: TASK-21
 title: Add listening history
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 15:41'
+updated_date: '2026-09-17 17:08'
 labels:
   - library
 dependencies:
@@ -19,6 +20,12 @@ Record plays (last 50, deduped) when playback starts, /history page with clear a
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 History persists across reloads
-- [ ] #2 Store is unit tested
+- [x] #1 History persists across reloads
+- [x] #2 Store is unit tested
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+History store (last 50, deduped, newest first) recorded once per playback session, /history logbook with relative times, favorite and play controls, clear action. Unit tested and verified in Chrome including reload persistence.
+<!-- SECTION:FINAL_SUMMARY:END -->
