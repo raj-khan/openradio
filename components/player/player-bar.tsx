@@ -3,6 +3,8 @@
 import { Loader2, Pause, Play, RotateCcw, Volume2, VolumeX, X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { StationArtwork } from "@/components/stations/station-artwork";
+import { EqualizerBars } from "@/components/tuner/equalizer-bars";
+import { FrequencyReadout } from "@/components/tuner/frequency-readout";
 import type { PlayerStatus } from "@/lib/player/machine";
 import { usePlayerStore } from "@/lib/player/store";
 import { useNowPlayingView } from "@/lib/player/view-store";
@@ -52,9 +54,25 @@ export function PlayerBar({ nowPlaying }: { nowPlaying?: ReactNode }) {
         <section
           aria-label="Player"
           className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-surface/90 backdrop-blur-xl"
+          data-status={status}
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
-          <div className="mx-auto flex h-[5.5rem] w-full max-w-6xl items-center gap-3 px-4">
+          {/* Tuning scale along the top edge; the needle glows while on air. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 -top-px h-2 bg-[repeating-linear-gradient(to_right,var(--border)_0_1px,transparent_1px_12px)] opacity-70"
+          />
+          <div
+            aria-hidden="true"
+            className={`absolute -top-1 left-1/2 h-3 w-[2px] -translate-x-1/2 transition-colors ${
+              status === "playing" ? "bg-accent shadow-[0_0_10px_var(--accent)]" : "bg-muted"
+            }`}
+          />
+          <div
+            aria-hidden="true"
+            className="grille pointer-events-none absolute inset-0 opacity-60"
+          />
+          <div className="relative mx-auto flex h-[5.5rem] w-full max-w-6xl items-center gap-3 px-4">
             <button
               type="button"
               onClick={useNowPlayingView.getState().show}
@@ -62,8 +80,15 @@ export function PlayerBar({ nowPlaying }: { nowPlaying?: ReactNode }) {
               aria-haspopup="dialog"
               className="flex min-w-0 flex-1 items-center gap-3 rounded-lg text-left"
             >
-              <StationArtwork station={station} className="size-12" />
+              <StationArtwork
+                station={station}
+                className="size-12 shadow-[0_6px_20px_rgb(0_0_0/0.5)] ring-1 ring-border"
+              />
               <div className="min-w-0">
+                <p className="flex items-center gap-2 font-mono text-[11px] text-muted">
+                  <FrequencyReadout stationId={station.id} size="sm" className="text-accent-alt" />
+                  <EqualizerBars active={status === "playing"} className="h-2.5" />
+                </p>
                 <p className="truncate font-medium">
                   {station.countryCode && (
                     <span className="mr-1.5" aria-hidden="true">
@@ -76,12 +101,7 @@ export function PlayerBar({ nowPlaying }: { nowPlaying?: ReactNode }) {
                   {status === "error" ? (
                     <span className="text-accent-alt">{error}</span>
                   ) : (
-                    <>
-                      {status === "playing" && (
-                        <span className="mr-1.5 inline-block size-2 rounded-full bg-accent align-middle" />
-                      )}
-                      {nowPlaying && status === "playing" ? nowPlaying : STATUS_TEXT[status]}
-                    </>
+                    <>{nowPlaying && status === "playing" ? nowPlaying : STATUS_TEXT[status]}</>
                   )}
                 </p>
               </div>
@@ -124,7 +144,7 @@ export function PlayerBar({ nowPlaying }: { nowPlaying?: ReactNode }) {
                       ? `Pause ${station.name}`
                       : `Play ${station.name}`
                 }
-                className="flex size-12 items-center justify-center rounded-full bg-accent text-accent-contrast transition-transform hover:scale-105"
+                className="flex size-12 items-center justify-center rounded-full bg-accent text-accent-contrast shadow-[0_0_24px_color-mix(in_oklab,var(--accent)_40%,transparent),inset_0_-3px_0_rgb(0_0_0/0.25)] transition-transform hover:scale-105"
               >
                 {status === "error" ? (
                   <RotateCcw className="size-5" aria-hidden="true" />

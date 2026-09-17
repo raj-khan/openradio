@@ -22,7 +22,7 @@ const ORDER_LABELS = {
 } as const;
 
 const fieldClass =
-  "h-11 w-full rounded-xl border border-border bg-surface px-3 text-text placeholder:text-muted focus:border-accent focus:outline-none";
+  "h-11 w-full rounded-full border border-border bg-background/70 px-4 text-text placeholder:text-muted focus:border-accent focus:outline-none";
 
 export function SearchFilters({ initial, countries, languages, tags }: SearchFiltersProps) {
   const router = useRouter();
@@ -64,7 +64,7 @@ export function SearchFilters({ initial, countries, languages, tags }: SearchFil
     <form
       role="search"
       onSubmit={onSubmit}
-      className="space-y-3"
+      className="dial-surface space-y-3 rounded-[var(--radius-tile)] border border-border p-3 sm:p-4"
       aria-busy={pending}
       aria-label="Station search"
     >
@@ -83,7 +83,7 @@ export function SearchFilters({ initial, countries, languages, tags }: SearchFil
         />
         <button
           type="submit"
-          className="flex h-11 items-center gap-2 rounded-xl bg-accent px-4 font-medium text-accent-contrast"
+          className="flex h-11 shrink-0 items-center gap-2 rounded-full bg-accent px-5 font-medium text-accent-contrast"
         >
           <Search className="size-4" aria-hidden="true" />
           <span className="sr-only sm:not-sr-only">Search</span>
@@ -92,7 +92,10 @@ export function SearchFilters({ initial, countries, languages, tags }: SearchFil
 
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
         <div>
-          <label htmlFor="search-country" className="mb-1 block text-xs text-muted">
+          <label
+            htmlFor="search-country"
+            className="mb-1 block px-2 font-mono text-[10px] tracking-widest text-muted uppercase"
+          >
             Country
           </label>
           <select
@@ -110,7 +113,10 @@ export function SearchFilters({ initial, countries, languages, tags }: SearchFil
           </select>
         </div>
         <div>
-          <label htmlFor="search-language" className="mb-1 block text-xs text-muted">
+          <label
+            htmlFor="search-language"
+            className="mb-1 block px-2 font-mono text-[10px] tracking-widest text-muted uppercase"
+          >
             Language
           </label>
           <select
@@ -128,7 +134,10 @@ export function SearchFilters({ initial, countries, languages, tags }: SearchFil
           </select>
         </div>
         <div>
-          <label htmlFor="search-tag" className="mb-1 block text-xs text-muted">
+          <label
+            htmlFor="search-tag"
+            className="mb-1 block px-2 font-mono text-[10px] tracking-widest text-muted uppercase"
+          >
             Genre or tag
           </label>
           <input
@@ -151,7 +160,10 @@ export function SearchFilters({ initial, countries, languages, tags }: SearchFil
           </datalist>
         </div>
         <div>
-          <label htmlFor="search-order" className="mb-1 block text-xs text-muted">
+          <label
+            htmlFor="search-order"
+            className="mb-1 block px-2 font-mono text-[10px] tracking-widest text-muted uppercase"
+          >
             Sort by
           </label>
           <select

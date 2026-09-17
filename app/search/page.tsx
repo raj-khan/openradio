@@ -35,7 +35,10 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
   return (
     <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8">
       <header className="space-y-2">
-        <h1 className="text-3xl font-semibold tracking-tight">Search stations</h1>
+        <p className="font-mono text-[11px] tracking-[0.25em] text-accent uppercase">
+          Scan the dial
+        </p>
+        <h1 className="text-4xl font-semibold sm:text-5xl">Search stations</h1>
         <p className="text-muted">Find live radio by name, country, language or genre.</p>
       </header>
 
