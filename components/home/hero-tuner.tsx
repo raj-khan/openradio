@@ -1,10 +1,10 @@
 "use client";
 
-import { ArrowRight, Loader2, Play, Search } from "lucide-react";
+import { ArrowRight, Loader2, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
+import { DiscoverForm } from "@/components/discover/discover-form";
 import { SurpriseButton } from "@/components/discovery/surprise-button";
 import { FrequencyDial } from "@/components/tuner/frequency-dial";
 import { EqualizerBars } from "@/components/tuner/equalizer-bars";
@@ -20,11 +20,9 @@ interface HeroTunerProps {
 }
 
 export function HeroTuner({ places, counts }: HeroTunerProps) {
-  const router = useRouter();
   const [index, setIndex] = useState(0);
   const [tuning, setTuning] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [query, setQuery] = useState("");
   const playing = usePlayerStore((s) => s.status === "playing");
   const currentCountry = usePlayerStore((s) => s.station?.countryCode);
 
@@ -47,12 +45,6 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
     } finally {
       setTuning(false);
     }
-  };
-
-  const onSearch = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const text = query.trim();
-    router.push(text ? `/search?text=${encodeURIComponent(text)}` : "/search");
   };
 
   const visible = new Set([index - 1, index, index + 1]);
@@ -155,24 +147,7 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
             label="Tune to a city"
             className="[&_.dial-surface]:border-white/15 [&_.dial-surface]:bg-black/45 [&_.dial-surface]:backdrop-blur-md"
           />
-          <form role="search" onSubmit={onSearch} className="relative max-w-xl">
-            <label htmlFor="home-search" className="sr-only">
-              Search stations
-            </label>
-            <Search
-              className="pointer-events-none absolute top-1/2 left-4 z-10 size-4 -translate-y-1/2 text-white/60"
-              aria-hidden="true"
-            />
-            <input
-              id="home-search"
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Or search any station by name"
-              maxLength={100}
-              className="h-12 w-full rounded-full border border-white/20 bg-black/40 pr-4 pl-11 text-white backdrop-blur-md placeholder:text-white/55 focus:border-accent focus:outline-none"
-            />
-          </form>
+          <DiscoverForm />
         </div>
       </div>
     </section>
