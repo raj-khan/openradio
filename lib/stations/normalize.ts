@@ -68,6 +68,11 @@ export function splitList(value: unknown, max = Number.POSITIVE_INFINITY): strin
   return [...seen];
 }
 
+function knownCodec(value: unknown): string | undefined {
+  const codec = text(value)?.toUpperCase();
+  return codec && codec !== "UNKNOWN" ? codec.slice(0, 12) : undefined;
+}
+
 function isHlsStream(raw: RawRadioBrowserStation, streamUrl: string): boolean {
   if (raw.hls === 1 || raw.hls === "1" || raw.hls === true) return true;
   try {
@@ -98,7 +103,7 @@ export function normalizeStation(raw: RawRadioBrowserStation): Station | null {
     state: text(raw.state),
     languages: splitList(raw.language),
     tags: splitList(raw.tags, MAX_TAGS),
-    codec: text(raw.codec)?.toUpperCase(),
+    codec: knownCodec(raw.codec),
     bitrate: bitrate > 0 ? bitrate : undefined,
     isHls: isHlsStream(raw, streamUrl),
     votes: count(raw.votes),

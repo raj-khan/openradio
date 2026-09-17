@@ -76,6 +76,7 @@ describe("normalizeStation", () => {
       favicon: "not a url",
       countrycode: "XYZ",
       bitrate: "abc",
+      codec: "UNKNOWN",
       votes: -5,
       tags: 42,
     });
@@ -83,6 +84,7 @@ describe("normalizeStation", () => {
       faviconUrl: undefined,
       countryCode: undefined,
       bitrate: undefined,
+      codec: undefined,
       votes: 0,
       tags: [],
       languages: [],

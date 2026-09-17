@@ -21,14 +21,33 @@ export function hueFromString(value: string): number {
   return hash % 360;
 }
 
+let regionNames: Intl.DisplayNames | null | undefined;
+
+/** Short English country name for an ISO code, falling back to the provided name. */
+export function countryName(code?: string, fallback?: string): string | undefined {
+  if (code && /^[A-Z]{2}$/i.test(code)) {
+    if (regionNames === undefined) {
+      try {
+        regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+      } catch {
+        regionNames = null;
+      }
+    }
+    const name = regionNames?.of(code.toUpperCase());
+    if (name && name.toUpperCase() !== code.toUpperCase()) return name;
+  }
+  return fallback;
+}
+
 /** Short "Country · CODEC 128 kbps" style line. */
 export function stationSubtitle(station: {
   country?: string;
+  countryCode?: string;
   codec?: string;
   bitrate?: number;
 }): string {
   const quality = [station.codec, station.bitrate ? `${station.bitrate} kbps` : undefined]
     .filter(Boolean)
     .join(" ");
-  return [station.country, quality].filter(Boolean).join(" · ");
+  return [countryName(station.countryCode, station.country), quality].filter(Boolean).join(" · ");
 }

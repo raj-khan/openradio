@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { countryFlag, hueFromString, initials, stationSubtitle } from "@/lib/stations/display";
+import {
+  countryFlag,
+  countryName,
+  hueFromString,
+  initials,
+  stationSubtitle,
+} from "@/lib/stations/display";
 
 describe("display helpers", () => {
   it("builds country flags", () => {
@@ -25,5 +31,14 @@ describe("display helpers", () => {
       "Japan · MP3 128 kbps",
     );
     expect(stationSubtitle({})).toBe("");
+    expect(
+      stationSubtitle({ country: "The United Kingdom Of Great Britain", countryCode: "GB" }),
+    ).toBe("United Kingdom");
+  });
+
+  it("builds short country names", () => {
+    expect(countryName("JP")).toBe("Japan");
+    expect(countryName("zz", "Somewhere")).toBe("Somewhere");
+    expect(countryName(undefined, "Fallback")).toBe("Fallback");
   });
 });
