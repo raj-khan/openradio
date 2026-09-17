@@ -1,0 +1,38 @@
+name: Bug report
+description: Something in OpenRadio is broken or behaves oddly
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+  - type: input
+    id: station
+    attributes:
+      label: Station or page
+      description: Link to the station or page, if it is about one
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and device
+      placeholder: Chrome 140 on Android 15
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: The station also fails in other players (if so, it is likely a station problem, not OpenRadio)
+        - label: I can reproduce this after a reload

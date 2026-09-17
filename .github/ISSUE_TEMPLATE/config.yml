@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Station listing problem
+    url: https://www.radio-browser.info
+    about: Wrong stream, name or country comes from the Radio Browser directory. Fix it there and OpenRadio follows.
+  - name: Security issue
+    url: https://github.com/raj-khan/openradio/security/advisories/new
+    about: Please report vulnerabilities privately.

@@ -1,9 +1,10 @@
 ---
 id: TASK-47
 title: Add community health files and templates
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 18:29'
+updated_date: '2026-09-17 18:40'
 labels:
   - docs
 dependencies:
@@ -20,6 +21,12 @@ CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, issue and pull request templat
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 GitHub shows contributing, code of conduct, security and license
-- [ ] #2 Issue and PR templates present
+- [x] #1 GitHub shows contributing, code of conduct, security and license
+- [x] #2 Issue and PR templates present
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+CONTRIBUTING, CODE_OF_CONDUCT and SECURITY plus bug and idea issue forms, template config linking Radio Browser and private security reports, and a PR checklist.
+<!-- SECTION:FINAL_SUMMARY:END -->

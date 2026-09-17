@@ -1,0 +1,22 @@
+name: Idea or feature request
+description: Suggest something OpenRadio could do
+labels: ["idea"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      description: What are you trying to do, and what would make it easier?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Anything you tried or considered?
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Fits the project principles
+      options:
+        - label: It does not require accounts or tracking listeners
+        - label: It does not rely on hosting, recording or rebroadcasting audio
