@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { StationCard } from "@/components/stations/station-card";
+import { TunerCard } from "@/components/stations/tuner-card";
 import type { Station } from "@/lib/stations/types";
 
 interface StationGridProps {
@@ -21,28 +21,34 @@ export function StationGrid({ stations, empty, renderActions, label }: StationGr
   }
 
   return (
-    <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3" aria-label={label}>
+    <ul
+      className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      aria-label={label}
+    >
       {stations.map((station) => (
         <li key={station.id}>
-          <StationCard station={station} actions={renderActions?.(station)} />
+          <TunerCard station={station} actions={renderActions?.(station)} />
         </li>
       ))}
     </ul>
   );
 }
 
-export function StationGridSkeleton({ count = 6 }: { count?: number }) {
+export function StationGridSkeleton({ count = 10 }: { count?: number }) {
   return (
-    <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
+    <ul
+      className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      aria-hidden="true"
+    >
       {Array.from({ length: count }, (_, i) => (
         <li
           key={i}
-          className="flex h-20 animate-pulse items-center gap-3 rounded-2xl bg-surface/70 p-3"
+          className="animate-pulse overflow-hidden rounded-[var(--radius-tile)] bg-surface"
         >
-          <div className="size-14 rounded-xl bg-surface-strong" />
-          <div className="flex-1 space-y-2">
-            <div className="h-3 w-2/3 rounded bg-surface-strong" />
-            <div className="h-3 w-1/3 rounded bg-surface-strong" />
+          <div className="grille aspect-[4/3] bg-surface-strong" />
+          <div className="space-y-2 p-3">
+            <div className="h-3 w-3/4 rounded bg-surface-strong" />
+            <div className="h-3 w-1/2 rounded bg-surface-strong" />
           </div>
         </li>
       ))}

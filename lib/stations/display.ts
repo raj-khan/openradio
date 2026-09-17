@@ -51,3 +51,28 @@ export function stationSubtitle(station: {
     .join(" ");
   return [countryName(station.countryCode, station.country), quality].filter(Boolean).join(" · ");
 }
+
+/** First tag that adds information (not the codec or country name). */
+export function primaryTag(station: {
+  tags: string[];
+  codec?: string;
+  country?: string;
+  countryCode?: string;
+}): string | undefined {
+  const noise = new Set(
+    [
+      station.codec,
+      station.country,
+      station.countryCode,
+      countryName(station.countryCode),
+      "radio",
+      "fm",
+      "am",
+      "online",
+      "internet radio",
+    ]
+      .filter((value): value is string => Boolean(value))
+      .map((value) => value.toLowerCase()),
+  );
+  return station.tags.find((tag) => !noise.has(tag) && !/^\d+(\.\d+)?\s*(fm|mhz)?$/.test(tag));
+}

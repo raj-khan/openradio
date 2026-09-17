@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { hueFromString, initials } from "@/lib/stations/display";
 
 interface StationArtworkProps {
@@ -10,8 +10,15 @@ interface StationArtworkProps {
 
 /** Station favicon with a generated gradient placeholder when missing or broken. */
 export function StationArtwork({ station, className = "size-12" }: StationArtworkProps) {
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const url = station.faviconUrl;
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // Server-rendered images can fail before hydration, when onError is not attached yet.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth === 0 && url) setFailedUrl(url);
+  }, [url]);
   const showImage = url && failedUrl !== url;
   const hue = hueFromString(station.id);
 
@@ -24,6 +31,7 @@ export function StationArtwork({ station, className = "size-12" }: StationArtwor
         // External station artwork from arbitrary hosts, so next/image is not used.
         // eslint-disable-next-line @next/next/no-img-element
         <img
+          ref={imgRef}
           src={url}
           alt=""
           loading="lazy"

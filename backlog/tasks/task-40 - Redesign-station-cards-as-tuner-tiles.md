@@ -1,9 +1,10 @@
 ---
 id: TASK-40
 title: Redesign station cards as tuner tiles
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-17 16:24'
+updated_date: '2026-09-17 16:40'
 labels:
   - design
 dependencies:
@@ -21,6 +22,12 @@ Replace list-row cards with TunerCard preset-style tiles, add PlaceTile, MoodTil
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Tiles responsive from 360px
-- [ ] #2 Keyboard accessible with visible focus
+- [x] #1 Tiles responsive from 360px
+- [x] #2 Keyboard accessible with visible focus
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+TunerCard preset tiles (frequency, grille, artwork label, equalizer when current, play knob), PlaceTile and MoodTile photo tiles with scrims and tick strip, snap-scrolling Shelf with arrows; grid switched to tuner tiles. Verified at 390px and 1280px.
+<!-- SECTION:FINAL_SUMMARY:END -->

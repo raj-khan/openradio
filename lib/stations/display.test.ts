@@ -4,6 +4,7 @@ import {
   countryName,
   hueFromString,
   initials,
+  primaryTag,
   stationSubtitle,
 } from "@/lib/stations/display";
 
@@ -40,5 +41,18 @@ describe("display helpers", () => {
     expect(countryName("JP")).toBe("Japan");
     expect(countryName("zz", "Somewhere")).toBe("Somewhere");
     expect(countryName(undefined, "Fallback")).toBe("Fallback");
+  });
+});
+
+describe("primaryTag", () => {
+  it("skips codec, country and generic tags", () => {
+    expect(
+      primaryTag({
+        tags: ["aac", "france", "radio", "101.5", "news"],
+        codec: "AAC",
+        countryCode: "FR",
+      }),
+    ).toBe("news");
+    expect(primaryTag({ tags: ["fm"] })).toBeUndefined();
   });
 });
