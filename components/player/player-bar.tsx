@@ -2,6 +2,7 @@
 
 import { Loader2, Pause, Play, RotateCcw, Volume2, VolumeX, X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
+import { FavoriteButton } from "@/components/library/favorite-button";
 import { StationArtwork } from "@/components/stations/station-artwork";
 import { EqualizerBars } from "@/components/tuner/equalizer-bars";
 import { FrequencyReadout } from "@/components/tuner/frequency-readout";
@@ -108,6 +109,7 @@ export function PlayerBar({ nowPlaying }: { nowPlaying?: ReactNode }) {
             </button>
 
             <div className="flex items-center gap-1 sm:gap-2">
+              <FavoriteButton station={station} />
               <div className="hidden items-center gap-2 sm:flex">
                 <button
                   type="button"

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FavoriteButton } from "@/components/library/favorite-button";
 import { PlayButton } from "@/components/stations/play-button";
 import { StationArtwork } from "@/components/stations/station-artwork";
 import { StationGrid } from "@/components/stations/station-grid";
@@ -99,6 +100,7 @@ export default async function StationPage({ params }: PageProps<"/station/[id]">
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <PlayButton station={station} size="lg" />
+              <FavoriteButton station={station} variant="glass" className="size-11" />
               {station.homepageUrl && (
                 <a
                   href={station.homepageUrl}

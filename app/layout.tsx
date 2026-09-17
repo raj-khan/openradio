@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { AudioEngine } from "@/components/player/audio-engine";
+import { LibraryHydrator } from "@/components/library/library-hydrator";
 import { MediaSession } from "@/components/player/media-session";
 import { NowPlayingView } from "@/components/player/now-playing-view";
 import { PlayerBar } from "@/components/player/player-bar";
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <NowPlayingView />
         <AudioEngine />
         <MediaSession />
+        <LibraryHydrator />
         <div aria-hidden="true" style={{ height: "var(--player-space)" }} />
       </body>
     </html>

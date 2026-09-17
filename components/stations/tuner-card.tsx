@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { FavoriteButton } from "@/components/library/favorite-button";
 import { PlayButton } from "@/components/stations/play-button";
 import { StationArtwork } from "@/components/stations/station-artwork";
 import { EqualizerBars } from "@/components/tuner/equalizer-bars";
@@ -48,25 +49,28 @@ export function TunerCard({ station, actions }: TunerCardProps) {
           <PlayButton station={station} />
         </div>
       </div>
-      <div className="flex flex-1 flex-col gap-1 p-3">
-        <h3 className="line-clamp-2 leading-snug font-medium">
-          <Link
-            href={`/station/${station.id}`}
-            prefetch={false}
-            className="rounded outline-offset-2 after:absolute after:inset-0 after:content-[''] hover:underline"
-          >
-            {station.name}
-          </Link>
-        </h3>
-        <p className="truncate text-xs text-muted">
-          {station.countryCode && (
-            <span className="mr-1" aria-hidden="true">
-              {countryFlag(station.countryCode)}
-            </span>
-          )}
-          {countryName(station.countryCode, station.country) ?? "Worldwide"}
-          {tag && <span> · {tag}</span>}
-        </p>
+      <div className="flex flex-1 items-start gap-1 p-3 pr-1">
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <h3 className="line-clamp-2 leading-snug font-medium">
+            <Link
+              href={`/station/${station.id}`}
+              prefetch={false}
+              className="rounded outline-offset-2 after:absolute after:inset-0 after:content-[''] hover:underline"
+            >
+              {station.name}
+            </Link>
+          </h3>
+          <p className="truncate text-xs text-muted">
+            {station.countryCode && (
+              <span className="mr-1" aria-hidden="true">
+                {countryFlag(station.countryCode)}
+              </span>
+            )}
+            {countryName(station.countryCode, station.country) ?? "Worldwide"}
+            {tag && <span> · {tag}</span>}
+          </p>
+        </div>
+        <FavoriteButton station={station} className="relative z-10 -mt-1.5 size-9" />
       </div>
     </article>
   );

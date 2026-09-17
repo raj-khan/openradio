@@ -14,6 +14,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useRef } from "react";
+import { FavoriteButton } from "@/components/library/favorite-button";
 import { StationArtwork } from "@/components/stations/station-artwork";
 import { EqualizerBars } from "@/components/tuner/equalizer-bars";
 import { FrequencyReadout } from "@/components/tuner/frequency-readout";
@@ -198,6 +199,7 @@ export function NowPlayingView({ nowPlaying = null }: { nowPlaying?: string | nu
             </label>
 
             <div className="flex flex-wrap gap-2">
+              <FavoriteButton station={station} variant="glass" />
               <Link
                 href={`/station/${station.id}`}
                 onClick={hide}
