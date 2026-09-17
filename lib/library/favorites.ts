@@ -27,7 +27,7 @@ export const useFavorites = create<FavoritesState>()(
       clear: () => set({ stations: [] }),
     }),
     {
-      name: "radio-atlas:favorites",
+      name: "openradio:favorites",
       version: 1,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ stations: state.stations }),

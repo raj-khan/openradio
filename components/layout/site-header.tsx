@@ -25,8 +25,8 @@ export function SiteHeader() {
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-2 px-4">
         <Link href="/" className="flex items-center gap-2 rounded-md font-semibold tracking-tight">
           <Logo className="size-7 text-text" />
-          <span className="hidden sm:inline">Radio Atlas</span>
-          <span className="sr-only sm:hidden">Radio Atlas home</span>
+          <span className="hidden sm:inline">OpenRadio</span>
+          <span className="sr-only sm:hidden">OpenRadio home</span>
         </Link>
         <nav aria-label="Main">
           <ul className="flex items-center gap-1">

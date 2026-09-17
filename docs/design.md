@@ -1,6 +1,6 @@
-# Radio Atlas: Design direction
+# OpenRadio: Design direction
 
-**Concept: "Atlas Tuner".** Radio Atlas should feel like holding a beautiful world radio, not browsing a website. Every screen borrows from analog radio hardware (tuning scales, needles, frequency readouts, grille textures) and places it over full-bleed photography of the places and moods you tune into.
+**Concept: "Atlas Tuner".** OpenRadio should feel like holding a beautiful world radio, not browsing a website. Every screen borrows from analog radio hardware (tuning scales, needles, frequency readouts, grille textures) and places it over full-bleed photography of the places and moods you tune into.
 
 ## Research
 
@@ -12,7 +12,7 @@ Inspiration only, nothing copied:
 
 Recurring patterns worth adapting:
 
-| Pattern seen | How Radio Atlas uses it |
+| Pattern seen | How OpenRadio uses it |
 |---|---|
 | Huge frequency readout ("98.8 MHz") | Each station gets a stable pseudo frequency (87.5 to 108.0) shown in large mono digits |
 | Tick scale with a red tuning needle | `FrequencyDial`: a draggable/scrollable scale used to tune between places and moods |

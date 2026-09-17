@@ -58,7 +58,7 @@ export const usePlayerStore = create<PlayerState>()(
       };
     },
     {
-      name: "radio-atlas:player",
+      name: "openradio:player",
       version: 1,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ volume: state.volume, muted: state.muted }),

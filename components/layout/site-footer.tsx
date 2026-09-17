@@ -21,7 +21,7 @@ export function SiteFooter() {
             About
           </Link>
           <a
-            href="https://github.com/raj-khan/radio-atlas"
+            href="https://github.com/raj-khan/openradio"
             className="hover:text-text"
             rel="noopener noreferrer"
             target="_blank"

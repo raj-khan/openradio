@@ -16,7 +16,7 @@ export function buildMediaMetadata(
   return {
     title: nowPlaying?.trim() || station.name,
     artist: nowPlaying?.trim() ? station.name : (station.country ?? "Live radio"),
-    album: "Radio Atlas",
+    album: "OpenRadio",
     artwork: station.faviconUrl ? [{ src: station.faviconUrl, sizes: "512x512" }] : [],
   };
 }

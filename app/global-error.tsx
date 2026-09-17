@@ -22,10 +22,10 @@ export default function GlobalError({
           padding: "1rem",
         }}
       >
-        <title>Signal lost | Radio Atlas</title>
+        <title>Signal lost | OpenRadio</title>
         <main>
           <p style={{ fontSize: "4rem", margin: 0, color: "#ffb347" }}>000.0</p>
-          <h1 style={{ fontSize: "2rem" }}>Radio Atlas lost its signal</h1>
+          <h1 style={{ fontSize: "2rem" }}>OpenRadio lost its signal</h1>
           <p style={{ color: "#a89c8d" }}>Something went wrong loading the app.</p>
           <button
             type="button"

@@ -1,5 +1,5 @@
 /**
- * Content Security Policy for Radio Atlas pages.
+ * Content Security Policy for OpenRadio pages.
  *
  * Station streams, HLS segments and artwork live on arbitrary third-party
  * hosts, so media, connect and image sources must allow any http(s) origin.

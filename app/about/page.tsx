@@ -11,11 +11,11 @@ export const metadata: Metadata = {
 const SECTIONS = [
   {
     title: "What it is",
-    body: "Radio Atlas is an open-source way to explore live internet radio from around the world. Tune by place, mood, language or genre, describe what you want to hear, or let it surprise you.",
+    body: "OpenRadio is an open-source way to explore live internet radio from around the world. Tune by place, mood, language or genre, describe what you want to hear, or let it surprise you.",
   },
   {
     title: "Where the stations come from",
-    body: "Station listings come from Radio Browser, a free, community-maintained directory. Radio Atlas does not host, record or rebroadcast any audio: your browser connects directly to each station's own stream.",
+    body: "Station listings come from Radio Browser, a free, community-maintained directory. OpenRadio does not host, record or rebroadcast any audio: your browser connects directly to each station's own stream.",
   },
   {
     title: "Your privacy",
@@ -23,7 +23,7 @@ const SECTIONS = [
   },
   {
     title: "Culture and faith",
-    body: "Stations appear under faith, culture or language only when their broadcasters tag them that way. Radio Atlas never infers religion or ethnicity from a country, language or name.",
+    body: "Stations appear under faith, culture or language only when their broadcasters tag them that way. OpenRadio never infers religion or ethnicity from a country, language or name.",
   },
   {
     title: "AI, optionally",
@@ -51,7 +51,7 @@ export default function AboutPage() {
         <section className="space-y-2">
           <h2 className="text-2xl font-semibold">Open source</h2>
           <p className="leading-relaxed text-muted">
-            Radio Atlas is MIT licensed.{" "}
+            OpenRadio is MIT licensed.{" "}
             <a
               href={REPO_URL}
               className="text-text underline underline-offset-4"
@@ -66,9 +66,9 @@ export default function AboutPage() {
         <section className="space-y-2">
           <h2 className="text-2xl font-semibold">Disclaimer</h2>
           <p className="leading-relaxed text-muted">
-            Streams, names and logos belong to their stations. Radio Atlas is not affiliated with
-            any station and is not responsible for their content. Station owners can update or
-            remove listings through{" "}
+            Streams, names and logos belong to their stations. OpenRadio is not affiliated with any
+            station and is not responsible for their content. Station owners can update or remove
+            listings through{" "}
             <a
               href="https://www.radio-browser.info"
               className="text-text underline underline-offset-4"

@@ -1,4 +1,4 @@
-/* Radio Atlas service worker. Caches the app shell and station metadata for
+/* OpenRadio service worker. Caches the app shell and station metadata for
  * offline browsing. It never touches audio streams or third-party requests. */
 const VERSION = "v1";
 const SHELL_CACHE = `ra-shell-${VERSION}`;

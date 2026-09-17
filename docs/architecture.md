@@ -1,10 +1,10 @@
-# Radio Atlas: Architecture v3 (merged plan)
+# OpenRadio: Architecture v3 (merged plan)
 
 > Explore the world through radio.
 
 Open-source web app to discover and listen to live internet radio from every country, language and genre, with a calm, adaptive visual atmosphere and optional AI-powered natural-language discovery.
 
-This plan merges Plan 1 (OpenRadio) and Plan 2 (Radio Atlas v2). It keeps Plan 2's principles (provider abstraction, real data as source of truth, respectful culture handling, graceful degradation) and Plan 1's small footprint (one app, no database, everything user-specific stays on the device).
+This plan merges Plan 1 (OpenRadio) and Plan 2 (OpenRadio v2). It keeps Plan 2's principles (provider abstraction, real data as source of truth, respectful culture handling, graceful degradation) and Plan 1's small footprint (one app, no database, everything user-specific stays on the device).
 
 ---
 
@@ -145,7 +145,7 @@ Normalization rules: trim strings, split and lowercase tags and languages, drop 
 ## 7. Radio Browser client
 
 - Resolve a server from the official mirror list, fall back to `de1.api.radio-browser.info`.
-- Send a descriptive `User-Agent` (`RadioAtlas/<version>`).
+- Send a descriptive `User-Agent` (`OpenRadio/<version>`).
 - Always `hidebroken=true` for search.
 - 8 second timeout, one retry on another mirror.
 - Cache GET responses with Next.js fetch revalidation (facets 24h, search 10 min, station 1h).

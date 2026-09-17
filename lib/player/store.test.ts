@@ -54,7 +54,7 @@ describe("player store", () => {
     store.getState().toggleMute();
     store.getState().play(station("a"));
 
-    const saved = JSON.parse(localStorage.getItem("radio-atlas:player") ?? "{}");
+    const saved = JSON.parse(localStorage.getItem("openradio:player") ?? "{}");
     expect(saved.state).toEqual({ volume: 0.3, muted: true });
 
     store = await freshStore();

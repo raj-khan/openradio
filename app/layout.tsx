@@ -13,7 +13,7 @@ import { NowPlayingView } from "@/components/player/now-playing-view";
 import { PlayerBar } from "@/components/player/player-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteUrl } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,7 +34,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: siteUrl(),
   title: {
-    default: `${SITE_NAME}: ${SITE_TAGLINE}`,
+    default: SITE_TITLE,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -45,21 +45,25 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
   },
   keywords: [
+    "open source radio",
     "world radio",
     "internet radio",
-    "live radio",
-    "radio stations",
+    "live radio stations",
     "online radio player",
+    "free radio streaming",
   ],
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    url: "/",
+    locale: "en",
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
   },
 };

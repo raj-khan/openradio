@@ -1,10 +1,11 @@
-# Radio Atlas
+# OpenRadio
 
-Explore the world through radio.
+**Explore the world through radio.** Live radio from every country, language and genre, in one open-source player.
 
-Open-source web app to discover and listen to live internet radio from every country, language and genre.
+Site: [openradio.space](https://openradio.space)
 
-- Architecture: [docs/architecture.md](docs/architecture.md)
+- Architecture and principles: [docs/architecture.md](docs/architecture.md)
+- Design direction: [docs/design.md](docs/design.md)
 - Tasks: tracked with [Backlog.md](https://github.com/MrLesk/Backlog.md) in [`backlog/`](backlog/)
 
 Work in progress.

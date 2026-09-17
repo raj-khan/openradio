@@ -8,7 +8,7 @@ describe("buildMediaMetadata", () => {
     ).toEqual({
       title: "Radio A",
       artist: "Japan",
-      album: "Radio Atlas",
+      album: "OpenRadio",
       artwork: [{ src: "https://a.test/i.png", sizes: "512x512" }],
     });
   });

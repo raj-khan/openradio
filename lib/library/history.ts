@@ -31,7 +31,7 @@ export const useHistory = create<HistoryState>()(
       clear: () => set({ entries: [] }),
     }),
     {
-      name: "radio-atlas:history",
+      name: "openradio:history",
       version: 1,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ entries: state.entries }),

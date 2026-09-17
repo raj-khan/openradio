@@ -1,6 +1,6 @@
 # Agent instructions
 
-Radio Atlas is a Next.js 16 App Router app. Next.js 16 has breaking changes compared to older versions, so read the relevant guide in `node_modules/next/dist/docs/` before writing framework code.
+OpenRadio is a Next.js 16 App Router app. Next.js 16 has breaking changes compared to older versions, so read the relevant guide in `node_modules/next/dist/docs/` before writing framework code.
 
 - Architecture and principles: `docs/architecture.md`
 - Tasks: Backlog.md in `backlog/` (`backlog task list --plain`)

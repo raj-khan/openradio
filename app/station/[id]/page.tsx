@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps<"/station/[id]">): 
   if (result.status !== "found") return { title: "Station" };
   const { station } = result;
   const country = countryName(station.countryCode, station.country);
-  const description = `Listen live to ${station.name}${country ? ` from ${country}` : ""} on Radio Atlas.`;
+  const description = `Listen live to ${station.name}${country ? ` from ${country}` : ""} on OpenRadio.`;
   return {
     title: country ? `${station.name} (${country})` : station.name,
     description,

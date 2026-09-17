@@ -1,5 +1,5 @@
 {
-  "name": "radio-atlas",
+  "name": "openradio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -40,7 +40,7 @@
     "typescript": "^5",
     "vitest": "^5.0.1"
   },
-  "description": "Explore the world through radio.",
+  "description": "Open-source world radio: live stations from every country, language and genre.",
   "license": "MIT",
   "engines": {
     "node": ">=20.9"

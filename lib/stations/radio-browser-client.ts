@@ -4,7 +4,7 @@ const MIRROR_LIST_URL = "https://all.api.radio-browser.info/json/servers";
 const FALLBACK_MIRRORS = ["https://de1.api.radio-browser.info"];
 const MIRROR_TTL_MS = 60 * 60 * 1000;
 export const REQUEST_TIMEOUT_MS = 8000;
-export const USER_AGENT = "RadioAtlas/0.1 (+https://github.com/raj-khan/radio-atlas)";
+export const USER_AGENT = "OpenRadio/0.1 (+https://github.com/raj-khan/openradio)";
 
 export type QueryValue = string | number | boolean | undefined;
 
