@@ -34,8 +34,8 @@ export function PlayButton({ station, size = "md", className = "" }: PlayButtonP
       aria-label={`${playing ? "Pause" : "Play"} ${station.name}`}
       aria-pressed={playing}
       className={`flex shrink-0 items-center justify-center rounded-full transition ${dimension} ${
-        playing
-          ? "bg-accent text-accent-contrast"
+        playing || size === "lg"
+          ? "bg-accent text-accent-contrast shadow-[0_0_24px_color-mix(in_oklab,var(--accent)_40%,transparent)]"
           : "bg-surface-strong text-text hover:bg-accent hover:text-accent-contrast"
       } ${className}`}
     >
