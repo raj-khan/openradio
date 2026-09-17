@@ -11,6 +11,7 @@ import { NowPlayingView } from "@/components/player/now-playing-view";
 import { PlayerBar } from "@/components/player/player-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,11 +30,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: siteUrl(),
   title: {
-    default: "Radio Atlas",
-    template: "%s | Radio Atlas",
+    default: `${SITE_NAME}: ${SITE_TAGLINE}`,
+    template: `%s | ${SITE_NAME}`,
   },
-  description: "Explore the world through radio.",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "world radio",
+    "internet radio",
+    "live radio",
+    "radio stations",
+    "online radio player",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export const viewport: Viewport = {

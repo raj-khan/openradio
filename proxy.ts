@@ -19,7 +19,7 @@ export const config = {
   matcher: [
     {
       source:
-        "/((?!api|_next/static|_next/image|images|favicon.ico|sitemap.xml|robots.txt|manifest.webmanifest|sw.js).*)",
+        "/((?!api|_next/static|_next/image|images|favicon.ico|sitemap.xml|robots.txt|opengraph-image|manifest.webmanifest|sw.js).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },
