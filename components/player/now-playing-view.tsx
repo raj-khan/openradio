@@ -70,7 +70,7 @@ export function NowPlayingView() {
       </div>
 
       <div className="relative mx-auto flex w-full max-w-5xl flex-1 flex-col px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-        <header className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <p className="flex items-center gap-2 font-mono text-[11px] tracking-[0.25em] text-white/70 uppercase">
             <EqualizerBars active={playing} className="h-3" />
             {playing ? "On air" : busy ? "Tuning" : status === "error" ? "Signal lost" : "Paused"}
@@ -84,7 +84,7 @@ export function NowPlayingView() {
           >
             <ChevronDown className="size-5" aria-hidden="true" />
           </button>
-        </header>
+        </div>
 
         <div className="flex flex-1 flex-col items-center justify-center gap-8 py-8 md:flex-row md:gap-14">
           {/* Record disc with the station artwork as its label. */}

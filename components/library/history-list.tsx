@@ -44,6 +44,7 @@ export function HistoryList() {
           Clear history
         </button>
       </div>
+      <h2 className="sr-only">Recently played stations</h2>
       <ol className="grid max-w-3xl gap-2" aria-label="Recently played">
         {entries.map(({ station, playedAt }) => (
           <li key={station.id} className="flex items-center gap-3">

@@ -41,6 +41,7 @@ export function SearchResults({ initialStations, filters, pageSize }: SearchResu
 
   return (
     <div className="space-y-6">
+      <h2 className="sr-only">Stations</h2>
       <StationGrid
         stations={stations}
         label="Search results"

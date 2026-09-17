@@ -109,7 +109,7 @@ export default function AboutPage() {
               >
                 {image.alt || "Photo"}
               </a>{" "}
-              <span className="text-muted/70">by</span>{" "}
+              <span className="text-muted">by</span>{" "}
               <a
                 href={image.credit.profileUrl}
                 className="underline underline-offset-4"

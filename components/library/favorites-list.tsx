@@ -12,17 +12,20 @@ export function FavoritesList() {
   if (!hydrated) return <StationGridSkeleton count={5} />;
 
   return (
-    <StationGrid
-      stations={stations}
-      label="Favorite stations"
-      empty={
-        <span>
-          No presets saved yet. Tap the heart on any station to keep it here.{" "}
-          <Link href="/" className="text-text underline underline-offset-4">
-            Start tuning
-          </Link>
-        </span>
-      }
-    />
+    <>
+      <h2 className="sr-only">Saved stations</h2>
+      <StationGrid
+        stations={stations}
+        label="Favorite stations"
+        empty={
+          <span>
+            No presets saved yet. Tap the heart on any station to keep it here.{" "}
+            <Link href="/" className="text-text underline underline-offset-4">
+              Start tuning
+            </Link>
+          </span>
+        }
+      />
+    </>
   );
 }

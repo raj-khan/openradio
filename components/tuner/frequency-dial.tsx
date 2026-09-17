@@ -93,30 +93,29 @@ export function FrequencyDial({
 
   return (
     <div className={`relative select-none ${className}`}>
-      <div
-        role="slider"
-        tabIndex={0}
-        aria-label={label}
-        aria-valuemin={0}
-        aria-valuemax={Math.max(0, count - 1)}
-        aria-valuenow={value}
-        aria-valuetext={current ? current.label : undefined}
-        onKeyDown={onKeyDown}
-        className="dial-surface relative overflow-hidden rounded-3xl border border-border bg-surface/80 focus-visible:outline-2"
-      >
+      <div className="dial-surface relative overflow-hidden rounded-3xl border border-border bg-surface/80 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent">
+        {/* The scroller itself is the slider, so it is keyboard reachable and holds no nested controls. */}
         <div
           ref={scrollerRef}
+          role="slider"
+          tabIndex={0}
+          aria-label={label}
+          aria-valuemin={0}
+          aria-valuemax={Math.max(0, count - 1)}
+          aria-valuenow={value}
+          aria-valuetext={current ? current.label : undefined}
+          onKeyDown={onKeyDown}
           onScroll={onScroll}
-          className="no-scrollbar flex cursor-grab snap-x snap-mandatory overflow-x-auto overscroll-x-contain py-4 active:cursor-grabbing"
+          className="no-scrollbar flex cursor-grab snap-x snap-mandatory overflow-x-auto overscroll-x-contain py-4 outline-none active:cursor-grabbing"
           style={{ paddingInline: `calc(50% - ${SEGMENT / 2}px)` }}
         >
           {entries.map((entry, index) => (
-            <button
+            // Pointer shortcut only; keyboard and assistive tech use the slider.
+            <span
               key={entry.id}
-              type="button"
-              tabIndex={-1}
+              aria-hidden="true"
               onClick={() => select(index)}
-              className="group flex shrink-0 snap-center flex-col items-center"
+              className="group flex shrink-0 cursor-pointer snap-center flex-col items-center"
               style={{ width: SEGMENT }}
             >
               <span
@@ -148,7 +147,7 @@ export function FrequencyDial({
                   {entry.sublabel}
                 </span>
               )}
-            </button>
+            </span>
           ))}
         </div>
         {/* Needle */}
