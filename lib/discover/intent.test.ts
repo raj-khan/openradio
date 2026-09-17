@@ -60,3 +60,15 @@ describe("helpers", () => {
     );
   });
 });
+
+describe("country codes", () => {
+  it.each([
+    ["radio from germany", "DE"],
+    ["stations in the united kingdom", "GB"],
+    ["music from france", "FR"],
+    ["radio from vietnam", "VN"],
+    ["stations in myanmar", "MM"],
+  ])("maps %s to a canonical code", (input, code) => {
+    expect(parseIntent(input).country).toBe(code);
+  });
+});

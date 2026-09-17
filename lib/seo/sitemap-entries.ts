@@ -1,6 +1,12 @@
 import { PLACES, MOODS } from "@/lib/imagery/catalog";
 import type { Facet } from "@/lib/stations/types";
 
+/*
+ * Genre in country landing pages are intentionally left out: we cannot know
+ * their station counts here, and thin ones set noindex. They are discovered
+ * through links on country pages instead.
+ */
+
 /** Only index browse pages with enough stations to be useful (no thin pages). */
 export const MIN_STATIONS = 20;
 

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { MOODS } from "@/lib/imagery/catalog";
+import { allRegions, regionAliases } from "@/lib/stations/regions";
 
 export const MOOD_NAMES = [
   "calm",
@@ -223,26 +224,10 @@ let countryIndex: Map<string, string> | null = null;
 
 function buildCountryIndex() {
   const index = new Map<string, string>();
-  let names: Intl.DisplayNames | null = null;
-  try {
-    names = new Intl.DisplayNames(["en"], { type: "region" });
-  } catch {
-    names = null;
-  }
-  if (names) {
-    for (let a = 65; a <= 90; a++) {
-      for (let b = 65; b <= 90; b++) {
-        const code = String.fromCharCode(a, b);
-        let name: string | undefined;
-        try {
-          name = names.of(code);
-        } catch {
-          name = undefined;
-        }
-        if (!name || name === code || name === "Unknown Region") continue;
-        const key = normalizeQuery(name).trim();
-        if (key.length > 3 && !index.has(key)) index.set(key, code);
-      }
+  for (const region of allRegions()) {
+    for (const alias of regionAliases(region.name)) {
+      const key = normalizeQuery(alias).trim();
+      if (key.length > 3 && !index.has(key)) index.set(key, region.code);
     }
   }
   for (const [alias, code] of Object.entries({ ...COUNTRY_ALIASES, ...DEMONYMS })) {
