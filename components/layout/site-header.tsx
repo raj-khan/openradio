@@ -3,6 +3,7 @@
 import { Clock, Compass, Heart, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SurpriseButton } from "@/components/discovery/surprise-button";
 import { Logo } from "@/components/layout/logo";
 
 const NAV = [
@@ -46,6 +47,9 @@ export function SiteHeader() {
                 </li>
               );
             })}
+            <li>
+              <SurpriseButton variant="compact" />
+            </li>
           </ul>
         </nav>
       </div>

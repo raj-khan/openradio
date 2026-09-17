@@ -64,6 +64,7 @@ describe("parseIcyMetadata", () => {
     expect(parseIcyMetadata(enc.encode("StreamTitle='';"))).toBeNull();
     expect(parseIcyMetadata(enc.encode("StreamTitle=' - ';"))).toBeNull();
     expect(parseIcyMetadata(enc.encode("StreamTitle='9999999 - 9999999';"))).toBeNull();
+    expect(parseIcyMetadata(enc.encode("StreamTitle='_';"))).toBeNull();
     expect(parseIcyMetadata(enc.encode("StreamTitle='Blink-182 - 1979';"))).toBe(
       "Blink-182 - 1979",
     );

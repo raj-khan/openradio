@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { SurpriseButton } from "@/components/discovery/surprise-button";
 import { FrequencyDial } from "@/components/tuner/frequency-dial";
 import { EqualizerBars } from "@/components/tuner/equalizer-bars";
 import type { Place } from "@/lib/imagery/catalog";
@@ -134,6 +135,7 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </div>
+          <SurpriseButton />
           {message && (
             <p role="alert" className="text-sm text-[var(--accent-alt)]">
               {message}

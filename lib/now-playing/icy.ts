@@ -8,7 +8,7 @@ export function parseIcyMetadata(block: Uint8Array): string | null {
   if (text.includes("�")) text = new TextDecoder("latin1").decode(block);
   const match = text.replace(/\0+$/, "").match(/StreamTitle='(.*?)';(?=[A-Za-z]+=|\s*$)/s);
   const title = match?.[1]?.replace(/\0/g, "").replace(/\s+/g, " ").trim();
-  if (!title || /^[-\s|.\d]*$/.test(title)) return null;
+  if (!title || title.length < 2 || !/\p{L}/u.test(title)) return null;
   return title.slice(0, 200);
 }
 
