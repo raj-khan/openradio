@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { navigablePaths } from "@/lib/navigation";
 import { MIN_STATIONS, sitemapPaths } from "@/lib/seo/sitemap-entries";
 
 describe("sitemapPaths", () => {
@@ -39,5 +40,28 @@ describe("sitemapPaths", () => {
       tags: [],
     });
     expect(new Set(paths).size).toBe(paths.length);
+  });
+});
+
+describe("no orphaned routes", () => {
+  const facets = { countries: [], languages: [], tags: [] };
+  /** Paths reached from a station page's own links rather than site chrome. */
+  const REACHED_FROM_CONTENT = /^\/(country|tag|language)\//;
+
+  it("links every fixed route it asks search engines to index", () => {
+    // /discover sat in the sitemap with no link to it anywhere: crawlable but
+    // undiscoverable. Anything added to the sitemap needs a way in.
+    const linked = new Set(navigablePaths());
+    const unlinked = sitemapPaths(facets)
+      .filter((path) => !REACHED_FROM_CONTENT.test(path))
+      .filter((path) => !linked.has(path));
+    expect(unlinked).toEqual([]);
+  });
+
+  it("does not offer routes we mark noindex", () => {
+    const paths = sitemapPaths(facets);
+    expect(paths).not.toContain("/favorites");
+    expect(paths).not.toContain("/history");
+    expect(paths).not.toContain("/offline");
   });
 });

@@ -1,17 +1,21 @@
 "use client";
 
-import { Clock, Compass, Heart, Search } from "lucide-react";
+import { Clock, Compass, Heart, Radio, Search, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SurpriseButton } from "@/components/discovery/surprise-button";
 import { Logo } from "@/components/layout/logo";
+import { MAIN_NAV } from "@/lib/navigation";
 
-const NAV = [
-  { href: "/", label: "Discover", icon: Compass },
-  { href: "/search", label: "Search", icon: Search },
-  { href: "/favorites", label: "Favorites", icon: Heart },
-  { href: "/history", label: "History", icon: Clock },
-] as const;
+const ICONS = {
+  "/": Radio,
+  "/search": Search,
+  "/discover": Sparkles,
+  "/favorites": Heart,
+  "/history": Clock,
+} as Record<string, typeof Compass>;
+
+const NAV = MAIN_NAV.map((item) => ({ ...item, icon: ICONS[item.href] ?? Compass }));
 
 function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { VisitTotal } from "@/components/analytics/visit-total";
+import { FOOTER_NAV } from "@/lib/navigation";
 
 export function SiteFooter() {
   return (
@@ -23,9 +24,11 @@ export function SiteFooter() {
             <VisitTotal />
           </Suspense>
           <nav aria-label="Footer" className="flex gap-4">
-            <Link href="/about" className="hover:text-text">
-              About
-            </Link>
+            {FOOTER_NAV.map(({ href, label }) => (
+              <Link key={href} href={href} className="hover:text-text">
+                {label}
+              </Link>
+            ))}
             <a
               href="https://github.com/raj-khan/openradio"
               className="hover:text-text"
