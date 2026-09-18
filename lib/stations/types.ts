@@ -52,6 +52,8 @@ export interface Station {
   clickCount: number;
   lastCheckOk: boolean;
   lastCheckedAt?: string;
+  /** When the station's own details last changed, not when we last probed it. */
+  lastChangedAt?: string;
   source: "radio-browser";
 }
 

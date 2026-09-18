@@ -20,6 +20,7 @@ export interface RawRadioBrowserStation {
   clickcount?: unknown;
   lastcheckok?: unknown;
   lastchecktime_iso8601?: unknown;
+  lastchangetime_iso8601?: unknown;
 }
 
 export interface RawRadioBrowserFacet {
@@ -110,6 +111,7 @@ export function normalizeStation(raw: RawRadioBrowserStation): Station | null {
     clickCount: count(raw.clickcount),
     lastCheckOk: raw.lastcheckok === 1 || raw.lastcheckok === "1" || raw.lastcheckok === true,
     lastCheckedAt: text(raw.lastchecktime_iso8601),
+    lastChangedAt: text(raw.lastchangetime_iso8601),
     source: "radio-browser",
   };
 }
