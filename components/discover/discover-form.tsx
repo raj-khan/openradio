@@ -2,14 +2,8 @@
 
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
-
-const EXAMPLES = [
-  "Calm jazz from Japan",
-  "Bengali music from Bangladesh",
-  "UK news",
-  "Late night lofi",
-];
+import { useEffect, useState, type FormEvent } from "react";
+import { FALLBACK_SUGGESTIONS, readListener, suggestionsFor } from "@/lib/discover/suggestions";
 
 interface DiscoverFormProps {
   initial?: string;
@@ -25,6 +19,21 @@ export function DiscoverForm({
 }: DiscoverFormProps) {
   const router = useRouter();
   const [prompt, setPrompt] = useState(initial);
+  // The server cannot know the reader's clock, so it renders the fixed set and
+  // the browser swaps in something local once mounted. Rendering nothing first
+  // would leave a hole; guessing on the server would mismatch on hydration.
+  const [examples, setExamples] = useState<string[]>(FALLBACK_SUGGESTIONS);
+
+  useEffect(() => {
+    const listener = readListener();
+    if (!listener) return;
+    const local = suggestionsFor(listener);
+    if (local.length === 0) return;
+    // Swapped on the next frame rather than inside the effect: these are hints,
+    // not content, and they should not make the first paint render twice.
+    const frame = requestAnimationFrame(() => setExamples(local));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   const go = (value: string) => {
     const q = value.trim();
@@ -72,7 +81,7 @@ export function DiscoverForm({
       </form>
       {showExamples && (
         <ul className="flex flex-wrap gap-2" aria-label="Examples">
-          {EXAMPLES.map((example) => (
+          {examples.map((example) => (
             <li key={example}>
               <button
                 type="button"
