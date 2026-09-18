@@ -1,9 +1,10 @@
 ---
 id: TASK-62
 title: Skip to another station when Surprise me lands on a dead one
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-18 09:05'
+updated_date: '2026-09-18 09:40'
 labels:
   - bug
   - ux
@@ -25,3 +26,9 @@ Surprise me picks a random station and hands it to the player. When that stream 
 - [ ] #3 Gives up with a clear message only after a bounded number of tries
 - [ ] #4 Failure path covered by a test with a stream that never responds
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Two layers. Server: /api/surprise now probes up to 4 candidates at once with a 2.5s timeout and returns the first that actually answers, because Radio Browser's lastCheckOk goes stale. Verified against real streams: BBC World Service, SRG and Radio Paradise all came back reachable in 143-1384ms, while the exact station that broke the promo shoot (157.254.194.202) was rejected in 583ms, a bogus host in 3ms and a private IP in 0ms through the existing SSRF guard. Client: the response now carries alternates, and SurpriseButton watches the player for an error on the station it handed over and moves to the next candidate, covering geo-blocks, CORS and codec failures the server cannot see. Falls back to an unprobed pick rather than 404ing when nothing answers. Without this a dead station cost the listener the full 15s load timeout plus a retry, about 30 seconds, before anything said so.
+<!-- SECTION:FINAL_SUMMARY:END -->

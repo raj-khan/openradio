@@ -14,3 +14,13 @@ export function surpriseCandidates(stations: Station[], excludeCountry?: string)
 export function pickRandom<T>(items: T[], random = Math.random): T | undefined {
   return items.length ? items[Math.floor(random() * items.length)] : undefined;
 }
+
+/** Fisher-Yates copy, so the order itself carries the randomness. */
+export function shuffle<T>(items: T[], random = Math.random): T[] {
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}

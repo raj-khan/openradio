@@ -2,7 +2,7 @@
 
 import { Loader2, Shuffle } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePlayerStore } from "@/lib/player/store";
 import { countryFlag, countryName } from "@/lib/stations/display";
 import type { Station } from "@/lib/stations/types";
@@ -16,10 +16,37 @@ export function SurpriseButton({ variant = "hero" }: SurpriseButtonProps) {
   const [loading, setLoading] = useState(false);
   const [landed, setLanded] = useState<Station | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [skipped, setSkipped] = useState(0);
+  // Fallbacks from the API, used when a station dies after we hand it over.
+  const alternatesRef = useRef<Station[]>([]);
+
+  const tune = (station: Station) => {
+    setLanded(station);
+    usePlayerStore.getState().play(station);
+  };
+
+  /*
+   * The server hands us a station it just heard answer, but a stream can still
+   * fail in the browser: geo-blocked, CORS, a codec this device lacks, or it
+   * drops in the second between the probe and the play. Rather than leaving the
+   * listener on a dead end, move to the next candidate we were given.
+   */
+  useEffect(() => {
+    if (!landed) return;
+    return usePlayerStore.subscribe((state) => {
+      if (state.status !== "error" || state.station?.id !== landed.id) return;
+      const next = alternatesRef.current.shift();
+      if (!next) return; // Out of candidates: the player's own error stands.
+      setSkipped((count) => count + 1);
+      tune(next);
+    });
+  }, [landed]);
 
   const surprise = async () => {
     setLoading(true);
     setError(null);
+    setSkipped(0);
+    alternatesRef.current = [];
     try {
       const current = usePlayerStore.getState().station?.countryCode;
       const response = await fetch(`/api/surprise${current ? `?not=${current}` : ""}`, {
@@ -27,8 +54,8 @@ export function SurpriseButton({ variant = "hero" }: SurpriseButtonProps) {
       });
       const body = await response.json();
       if (!response.ok) throw new Error(body.error);
-      usePlayerStore.getState().play(body.station);
-      setLanded(body.station);
+      alternatesRef.current = body.alternates ?? [];
+      tune(body.station);
     } catch {
       setError("Couldn't find a surprise right now. Try again.");
     } finally {
@@ -74,6 +101,7 @@ export function SurpriseButton({ variant = "hero" }: SurpriseButtonProps) {
           <span className="text-[var(--accent-alt)]">{error}</span>
         ) : landed ? (
           <>
+            {skipped > 0 && <>That one was off the air, so here is another. </>}
             You&apos;re in <span aria-hidden="true">{countryFlag(landed.countryCode)}</span>{" "}
             {countryName(landed.countryCode, landed.country)}:{" "}
             <Link href={`/station/${landed.id}`} className="underline underline-offset-4">

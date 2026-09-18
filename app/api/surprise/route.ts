@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
 import { PROVIDER_UNAVAILABLE, apiError, logError } from "@/lib/api/responses";
 import { getStationProvider } from "@/lib/stations";
-import { pickRandom, surpriseCandidates } from "@/lib/stations/surprise";
+import { firstReachable } from "@/lib/stations/stream-probe";
+import { pickRandom, shuffle, surpriseCandidates } from "@/lib/stations/surprise";
 import { stationQuerySchema, type Station } from "@/lib/stations/types";
 
 const SURPRISE_POOL = 4000;
+/** Handed to the client so a station that dies mid-connect can be skipped there. */
+const MAX_ALTERNATES = 4;
 
 export interface SurpriseResponse {
   station: Station;
+  /** Fallbacks, best first, for when the chosen station fails in the browser. */
+  alternates: Station[];
 }
 
 /** A random, healthy station. `?not=JP` prefers somewhere other than that country. */
@@ -22,10 +27,15 @@ export async function GET(request: Request) {
     const stations = await getStationProvider().search(
       stationQuerySchema.parse({ order: "popular", limit: 40, offset }),
     );
-    const station = pickRandom(surpriseCandidates(stations, exclude));
+    const candidates = shuffle(surpriseCandidates(stations, exclude));
+    // Prefer one that answers right now; lastCheckOk alone is often out of date.
+    const station = (await firstReachable(candidates)) ?? pickRandom(candidates);
     if (!station) return apiError(404, "Couldn't find a surprise right now. Try again.");
     return NextResponse.json<SurpriseResponse>(
-      { station },
+      {
+        station,
+        alternates: candidates.filter((s) => s.id !== station.id).slice(0, MAX_ALTERNATES),
+      },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
