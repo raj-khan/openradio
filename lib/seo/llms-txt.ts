@@ -21,7 +21,11 @@ function entryPoints(): string[] {
     link("Tuner", "/", "the home dial, with a live station ready to play on arrival"),
     link("Search", "/search", "every station, filtered by country, language, genre and bitrate"),
     link("Discover", "/discover", "describe what you want to hear in plain English"),
-    link("About", "/about", "what OpenRadio is, where the stations come from, and the privacy terms"),
+    link(
+      "About",
+      "/about",
+      "what OpenRadio is, where the stations come from, and the privacy terms",
+    ),
   ];
 }
 
