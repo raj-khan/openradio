@@ -2,15 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/json-ld";
 import { FAQ_ITEMS } from "@/lib/copy/faq";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 import { breadcrumbJsonLd, faqJsonLd } from "@/lib/seo/structured-data";
 import { SITE_NAME } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Questions and answers",
   description:
     "How OpenRadio works: what it costs, where the stations come from, what it stores about you, and why a station sometimes goes quiet.",
-  alternates: { canonical: "/faq" },
-};
+  path: "/faq",
+});
 
 export default function FaqPage() {
   return (

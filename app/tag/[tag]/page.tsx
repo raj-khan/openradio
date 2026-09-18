@@ -2,17 +2,18 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BrowsePage } from "@/components/browse/browse-page";
 import { HERO_IMAGE, MOODS, moodForTag } from "@/lib/imagery/catalog";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 import { parseTermSegment, titleCase } from "@/lib/stations/browse";
 
 export async function generateMetadata({ params }: PageProps<"/tag/[tag]">): Promise<Metadata> {
   const tag = parseTermSegment((await params).tag);
   if (!tag) return { title: "Off the dial" };
   const mood = moodForTag(tag);
-  return {
+  return pageMetadata({
     title: `${mood && mood.primaryTag === tag ? mood.label : titleCase(tag)} radio`,
     description: `Listen to live ${tag} radio stations from around the world.`,
-    alternates: { canonical: `/tag/${encodeURIComponent(tag)}` },
-  };
+    path: `/tag/${encodeURIComponent(tag)}`,
+  });
 }
 
 export default async function TagPage({ params }: PageProps<"/tag/[tag]">) {

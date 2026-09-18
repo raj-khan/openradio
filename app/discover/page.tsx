@@ -2,15 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DiscoverForm } from "@/components/discover/discover-form";
 import { StationGrid } from "@/components/stations/station-grid";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 import { firstValues } from "@/lib/stations/query-string";
 import { filtersToQueryString } from "@/lib/stations/query-string";
 import { runDiscover } from "@/lib/discover/run";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Discover",
   description: "Describe what you want to hear and tune in to matching live radio.",
-  alternates: { canonical: "/discover" },
-};
+  path: "/discover",
+});
 
 const RELAXED: Record<string, string> = {
   mood: "No exact mood match, so these ignore the mood.",

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { FavoritesList } from "@/components/library/favorites-list";
 import { LibraryPage } from "@/components/library/library-page";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/favorites" },
-  robots: { index: false, follow: true },
+export const metadata: Metadata = pageMetadata({
   title: "Favorites",
   description: "Your saved radio stations, stored on this device.",
-};
+  path: "/favorites",
+  noIndex: true,
+});
 
 export default function FavoritesPage() {
   return (

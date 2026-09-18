@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { SearchFilters } from "@/components/search/search-filters";
 import { SearchResults } from "@/components/search/search-results";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 import { filtersToQueryString, firstValues } from "@/lib/stations/query-string";
 import { loadFacets, loadStations } from "@/lib/stations/server-data";
 import { parseStationQuery } from "@/lib/stations/types";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Search stations",
   description: "Search live radio stations by name, country, language and genre.",
-  alternates: { canonical: "/search" },
-};
+  path: "/search",
+});
 
 const PAGE_SIZE = 30;
 

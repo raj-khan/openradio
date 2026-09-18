@@ -66,17 +66,19 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/" },
   verification: verificationMetadata(),
+  // Titles carry the same template as the document title, so a page that sets
+  // only `title` still previews as itself rather than as the home page.
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: SITE_TITLE,
+    title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
     description: SITE_DESCRIPTION,
     url: "/",
     locale: "en",
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_TITLE,
+    title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
     description: SITE_DESCRIPTION,
   },
 };

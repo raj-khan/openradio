@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { HistoryList } from "@/components/library/history-list";
 import { LibraryPage } from "@/components/library/library-page";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/history" },
-  robots: { index: false, follow: true },
+export const metadata: Metadata = pageMetadata({
   title: "History",
   description: "Stations you listened to recently, stored on this device.",
-};
+  path: "/history",
+  noIndex: true,
+});
 
 export default function HistoryPage() {
   return (

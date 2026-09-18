@@ -14,6 +14,7 @@ import {
   relatedGenres,
   type Combo,
 } from "@/lib/seo/combos";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 import { breadcrumbJsonLd, stationListJsonLd } from "@/lib/seo/structured-data";
 import { countryFlag } from "@/lib/stations/display";
 import { loadStations } from "@/lib/stations/server-data";
@@ -34,13 +35,13 @@ export async function generateMetadata({ params }: PageProps<"/[slug]">): Promis
   if (!combo) return { title: "Off the dial" };
   const stations = await loadCombo(combo);
   const title = `${combo.genre.label} radio in ${combo.countryName}`;
-  return {
+  return pageMetadata({
     title,
     description: `Listen to live ${combo.genre.label.toLowerCase()} radio stations from ${combo.countryName}, free and without an account.`,
-    alternates: { canonical: `/${combo.slug}` },
+    path: `/${combo.slug}`,
     // Thin pages stay out of search results.
-    robots: stations.length >= MIN_COMBO_STATIONS ? undefined : { index: false, follow: true },
-  };
+    noIndex: stations.length < MIN_COMBO_STATIONS,
+  });
 }
 
 export default async function ComboPage({ params }: PageProps<"/[slug]">) {

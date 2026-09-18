@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ABOUT_SECTIONS } from "@/lib/copy/about";
 import { allImages } from "@/lib/imagery/catalog";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 import { REPO_URL, SITE_DESCRIPTION } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About",
   description: SITE_DESCRIPTION,
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   const credits = allImages();

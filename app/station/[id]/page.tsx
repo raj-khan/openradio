@@ -11,6 +11,7 @@ import { StationArtwork } from "@/components/stations/station-artwork";
 import { StationGrid } from "@/components/stations/station-grid";
 import { FrequencyReadout } from "@/components/tuner/frequency-readout";
 import { atmosphereFor } from "@/lib/imagery/atmosphere";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 import { breadcrumbJsonLd, stationJsonLd } from "@/lib/seo/structured-data";
 import { countryFlag, countryName, primaryTag } from "@/lib/stations/display";
 import { loadSimilarStations, loadStation } from "@/lib/stations/server-data";
@@ -23,12 +24,11 @@ export async function generateMetadata({ params }: PageProps<"/station/[id]">): 
   const { station } = result;
   const country = countryName(station.countryCode, station.country);
   const description = `Listen live to ${station.name}${country ? ` from ${country}` : ""} on OpenRadio.`;
-  return {
+  return pageMetadata({
     title: country ? `${station.name} (${country})` : station.name,
     description,
-    alternates: { canonical: `/station/${station.id}` },
-    openGraph: { title: station.name, description },
-  };
+    path: `/station/${station.id}`,
+  });
 }
 
 export default async function StationPage({ params }: PageProps<"/station/[id]">) {

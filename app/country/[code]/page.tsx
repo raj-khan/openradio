@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { BrowsePage } from "@/components/browse/browse-page";
 import { HERO_IMAGE, PLACES, placeForCountry } from "@/lib/imagery/catalog";
 import { PSEO_GENRES, comboSlug } from "@/lib/seo/combos";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 import { parseCountrySegment } from "@/lib/stations/browse";
 import { countryFlag, countryName } from "@/lib/stations/display";
 
@@ -11,11 +12,11 @@ export async function generateMetadata({
 }: PageProps<"/country/[code]">): Promise<Metadata> {
   const country = parseCountrySegment((await params).code);
   if (!country) return { title: "Off the dial" };
-  return {
+  return pageMetadata({
     title: `Radio from ${country.name}`,
     description: `Listen to live radio stations from ${country.name}.`,
-    alternates: { canonical: `/country/${country.code.toLowerCase()}` },
-  };
+    path: `/country/${country.code.toLowerCase()}`,
+  });
 }
 
 export default async function CountryPage({ params }: PageProps<"/country/[code]">) {

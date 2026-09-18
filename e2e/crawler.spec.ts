@@ -95,3 +95,41 @@ test("pages we do not want indexed say so", async ({ request }) => {
     expect(html, path).toMatch(/<meta name="robots" content="[^"]*noindex/);
   }
 });
+
+/*
+ * Link previews. These tags are invisible in a browser and are the only thing a
+ * chat app reads, so a page can look perfect and still share as something else
+ * entirely. That is exactly what happened: og:title and og:url were inherited
+ * from the root layout, so every page previewed as the home page.
+ */
+const SHAREABLE = [
+  { path: "/", title: "OpenRadio: world radio, open source" },
+  { path: "/faq", title: "Questions and answers" },
+  { path: "/about", title: "About" },
+  { path: "/country/jp", title: "Radio from Japan" },
+  { path: "/tag/jazz", title: "Jazz radio" },
+  { path: `/station/${TOKYO}`, title: "Tokyo Jazz Test FM" },
+  { path: "/jazz-radio-in-japan", title: "Jazz radio in Japan" },
+];
+
+const meta = (html: string, key: string) =>
+  html.match(new RegExp(`<meta (?:property|name)="${key}" content="([^"]*)"`, "i"))?.[1];
+
+for (const { path, title } of SHAREABLE) {
+  test(`${path} previews as itself when shared`, async ({ request }) => {
+    const html = await fetchAsCrawler(request, path);
+
+    expect(meta(html, "og:title"), "og:title").toContain(title);
+    expect(meta(html, "og:description"), "og:description").toBeTruthy();
+
+    // og:url must be this page, not the home page.
+    const canonical = html.match(/<link rel="canonical" href="([^"]*)"/)?.[1];
+    expect(meta(html, "og:url"), "og:url should match the canonical").toBe(canonical);
+
+    // The same link must not preview differently on X than on WhatsApp.
+    expect(meta(html, "twitter:title"), "twitter:title").toBe(meta(html, "og:title"));
+    expect(meta(html, "twitter:description")).toBe(meta(html, "og:description"));
+
+    expect(meta(html, "og:image"), "og:image").toMatch(/^https?:\/\//);
+  });
+}
