@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
-
 export default function AboutPage() {
   const credits = allImages();
   return (
