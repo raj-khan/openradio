@@ -3,6 +3,7 @@
 import { Loader2, Shuffle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useListeningMode } from "@/lib/library/listening-mode-store";
 import { usePlayerStore } from "@/lib/player/store";
 import { countryFlag, countryName } from "@/lib/stations/display";
 import type { Station } from "@/lib/stations/types";
@@ -49,9 +50,11 @@ export function SurpriseButton({ variant = "hero" }: SurpriseButtonProps) {
     alternatesRef.current = [];
     try {
       const current = usePlayerStore.getState().station?.countryCode;
-      const response = await fetch(`/api/surprise${current ? `?not=${current}` : ""}`, {
-        cache: "no-store",
-      });
+      const query = new URLSearchParams();
+      if (current) query.set("not", current);
+      const mode = useListeningMode.getState().mode;
+      if (mode !== "any") query.set("mode", mode);
+      const response = await fetch(`/api/surprise?${query}`, { cache: "no-store" });
       const body = await response.json();
       if (!response.ok) throw new Error(body.error);
       alternatesRef.current = body.alternates ?? [];

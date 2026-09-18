@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PROVIDER_UNAVAILABLE, apiError, logError } from "@/lib/api/responses";
 import { getStationProvider } from "@/lib/stations";
+import { isListeningMode, type ListeningMode } from "@/lib/stations/listening-mode";
 import { firstReachable } from "@/lib/stations/stream-probe";
 import { pickRandom, shuffle, surpriseCandidates } from "@/lib/stations/surprise";
 import { stationQuerySchema, type Station } from "@/lib/stations/types";
@@ -15,10 +16,16 @@ export interface SurpriseResponse {
   alternates: Station[];
 }
 
-/** A random, healthy station. `?not=JP` prefers somewhere other than that country. */
+/**
+ * A random, healthy station. `?not=JP` prefers somewhere other than that
+ * country, `?mode=talk` asks for voices rather than music.
+ */
 export async function GET(request: Request) {
-  const not = new URL(request.url).searchParams.get("not")?.toUpperCase();
+  const params = new URL(request.url).searchParams;
+  const not = params.get("not")?.toUpperCase();
   const exclude = not && /^[A-Z]{2}$/.test(not) ? not : undefined;
+  const requested = params.get("mode");
+  const mode: ListeningMode = isListeningMode(requested) ? requested : "any";
 
   try {
     // Radio Browser caches order=random results, so jump to a random page of the
@@ -27,7 +34,7 @@ export async function GET(request: Request) {
     const stations = await getStationProvider().search(
       stationQuerySchema.parse({ order: "popular", limit: 40, offset }),
     );
-    const candidates = shuffle(surpriseCandidates(stations, exclude));
+    const candidates = shuffle(surpriseCandidates(stations, exclude, mode));
     // Prefer one that answers right now; lastCheckOk alone is often out of date.
     const station = (await firstReachable(candidates)) ?? pickRandom(candidates);
     if (!station) return apiError(404, "Couldn't find a surprise right now. Try again.");

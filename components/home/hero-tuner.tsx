@@ -5,11 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { DiscoverForm } from "@/components/discover/discover-form";
+import { ListeningModeToggle } from "@/components/discovery/listening-mode-toggle";
 import { SurpriseButton } from "@/components/discovery/surprise-button";
 import { FrequencyDial } from "@/components/tuner/frequency-dial";
 import { EqualizerBars } from "@/components/tuner/equalizer-bars";
 import type { Place } from "@/lib/imagery/catalog";
+import { useListeningMode } from "@/lib/library/listening-mode-store";
 import { usePlayerStore } from "@/lib/player/store";
+import { matchesMode, meetsQualityFloor } from "@/lib/stations/listening-mode";
 import { countryFlag, countryName } from "@/lib/stations/display";
 import type { Station } from "@/lib/stations/types";
 import { stationFrequency } from "@/lib/tuner/frequency";
@@ -34,10 +37,15 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
     setTuning(true);
     setMessage(null);
     try {
-      const response = await fetch(`/api/stations?country=${place.countryCode}&limit=5`);
+      // Ask for more than we need, so there is something left after filtering.
+      const response = await fetch(`/api/stations?country=${place.countryCode}&limit=30`);
       const body: { stations?: Station[] } = await response.json();
-      const candidates = (body.stations ?? []).filter((s) => s.lastCheckOk);
-      const station = candidates[Math.floor(Math.random() * Math.min(candidates.length, 5))];
+      const live = (body.stations ?? []).filter((s) => s.lastCheckOk && meetsQualityFloor(s));
+      const mode = useListeningMode.getState().mode;
+      const wanted = live.filter((s) => matchesMode(s, mode));
+      // Somewhere with no talk station should still play, rather than refusing.
+      const candidates = wanted.length > 0 ? wanted : live;
+      const station = candidates[Math.floor(Math.random() * Math.min(candidates.length, 8))];
       if (!station) throw new Error("none");
       usePlayerStore.getState().play(station);
     } catch {
@@ -127,6 +135,7 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </div>
+          <ListeningModeToggle />
           <SurpriseButton />
           {message && (
             <p role="alert" className="text-sm text-[var(--accent-alt)]">
