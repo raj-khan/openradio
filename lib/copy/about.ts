@@ -20,7 +20,7 @@ export const ABOUT_SECTIONS: AboutSection[] = [
   },
   {
     title: "Your privacy",
-    body: "No accounts and no tracking. Favorites and listening history are stored only in your browser. When now playing information is shown, our server reads the station's public stream metadata for you. If a visit counter is switched on, it counts page views only, with no cookies and no personal data, and its numbers are public.",
+    body: "There are no accounts, and your favorites and listening history are stored only in your browser. When now playing information is shown, our server reads the station's public stream metadata for you. A visit counter may be switched on: it counts page views only, with no cookies and no personal data, and its numbers are public. Google Analytics may also be switched on, and that one does set cookies, so it stays off until you agree and the site works the same either way if you decline.",
   },
   {
     title: "Culture and faith",

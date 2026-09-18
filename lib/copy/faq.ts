@@ -30,7 +30,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Does OpenRadio track me?",
     answer:
-      "No. OpenRadio has no accounts and sets no advertising or tracking cookies. Your favorites and listening history are stored in your own browser and never sent anywhere, so they stay on that device.",
+      "OpenRadio has no accounts and shows no advertising. Your favorites and listening history are stored in your own browser and never sent anywhere, so they stay on that device. If the site owner has switched on Google Analytics, it asks before setting any cookie, and declining changes nothing about how the site works.",
   },
   {
     question: "Do I need to install an app?",

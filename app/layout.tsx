@@ -6,6 +6,8 @@ import { LibraryHydrator } from "@/components/library/library-hydrator";
 import { MediaSession } from "@/components/player/media-session";
 import { OfflineNotice } from "@/components/pwa/offline-notice";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
+import { AnalyticsConsent } from "@/components/analytics/analytics-consent";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { VisitCounter } from "@/components/analytics/visit-counter";
 import { JsonLd } from "@/components/seo/json-ld";
 import { AmbientBackground } from "@/components/vibe/ambient-background";
@@ -16,6 +18,7 @@ import { PlayerBar } from "@/components/player/player-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { goatcounterOrigin } from "@/lib/analytics/goatcounter";
+import { gaMeasurementId } from "@/lib/analytics/google-analytics";
 import {
   organizationJsonLd,
   softwareApplicationJsonLd,
@@ -113,6 +116,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <VibeController />
         <ServiceWorkerRegistration />
         <VisitCounter origin={goatcounterOrigin()} />
+        <GoogleAnalytics />
+        <AnalyticsConsent enabled={gaMeasurementId() !== null} />
         <LibraryHydrator />
         <div aria-hidden="true" style={{ height: "var(--player-space)" }} />
       </body>
