@@ -25,7 +25,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col gap-16 pb-16">
-      <HeroTuner places={places} counts={counts} />
+      <HeroTuner places={places} counts={counts} countries={countries} />
 
       <div className="mx-auto w-full max-w-6xl sm:px-4">
         <Shelf title="What's the mood?" eyebrow="Feel" itemClassName="w-72 sm:w-80">

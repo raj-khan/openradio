@@ -133,3 +133,50 @@ test("history fits a phone screen with long station names @mobile", async ({ pag
   }));
   expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
 });
+
+test("every country is reachable from the home page", async ({ page }) => {
+  // The dial carries 16 curated places; the directory has well over 200. Before
+  // this, the rest could not be reached from the home page at all.
+  await page.goto("/");
+  await page.getByRole("button", { name: "All countries" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "Choose a country" });
+  await expect(dialog).toBeVisible();
+  const search = page.getByRole("textbox", { name: "Search countries" });
+  await expect(search).toBeFocused();
+
+  const countries = page.getByRole("list", { name: "Countries" }).getByRole("listitem");
+  const all = await countries.count();
+  expect(all).toBeGreaterThan(1);
+
+  await search.fill("fran");
+  await expect(countries).toHaveCount(1);
+  await expect(countries.first()).toContainText("France");
+
+  await search.fill("zzzz");
+  await expect(page.getByText(/Nothing matches/)).toBeVisible();
+
+  // Escape must close it: a type="search" input would swallow the first press.
+  await search.fill("");
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+
+  await page.getByRole("button", { name: "All countries" }).click();
+  await page.getByRole("textbox", { name: "Search countries" }).fill("fran");
+  await countries.first().getByRole("button").click();
+  await expect(page).toHaveURL(/\/country\/fr$/);
+});
+
+test("the dial can be stepped without dragging it @mobile", async ({ page }) => {
+  // There is no keyboard on a touch screen, so the slider's arrow keys are out
+  // of reach and dragging a scale with a thumb is fiddly.
+  await page.goto("/");
+  const dial = page.getByRole("slider", { name: "Tune to a city" });
+  const first = await dial.getAttribute("aria-valuetext");
+
+  await page.getByRole("button", { name: /^Next:/ }).click();
+  await expect(dial).not.toHaveAttribute("aria-valuetext", first!);
+
+  await page.getByRole("button", { name: /^Previous:/ }).click();
+  await expect(dial).toHaveAttribute("aria-valuetext", first!);
+});

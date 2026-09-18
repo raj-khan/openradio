@@ -6,10 +6,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { DiscoverForm } from "@/components/discover/discover-form";
 import { ListeningModeToggle } from "@/components/discovery/listening-mode-toggle";
+import { CountryPicker } from "@/components/discovery/country-picker";
 import { SurpriseButton } from "@/components/discovery/surprise-button";
 import { FrequencyDial } from "@/components/tuner/frequency-dial";
 import { EqualizerBars } from "@/components/tuner/equalizer-bars";
 import type { Place } from "@/lib/imagery/catalog";
+import type { Facet } from "@/lib/stations/types";
 import { usePlayerStore } from "@/lib/player/store";
 import { useTuner } from "@/lib/player/use-tuner";
 import { countryFlag, countryName } from "@/lib/stations/display";
@@ -18,9 +20,11 @@ import { stationFrequency } from "@/lib/tuner/frequency";
 interface HeroTunerProps {
   places: Place[];
   counts: Record<string, number>;
+  /** Every country in the directory, for the picker behind "All countries". */
+  countries: Facet[];
 }
 
-export function HeroTuner({ places, counts }: HeroTunerProps) {
+export function HeroTuner({ places, counts, countries }: HeroTunerProps) {
   const [index, setIndex] = useState(0);
   const tuner = useTuner();
   const playing = usePlayerStore((s) => s.status === "playing");
@@ -118,6 +122,7 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
               Explore stations
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
+            <CountryPicker countries={countries} />
           </div>
           <ListeningModeToggle />
           <SurpriseButton />

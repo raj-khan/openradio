@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useRef, type KeyboardEvent } from "react";
 import { nearestDialIndex } from "@/lib/tuner/frequency";
 
@@ -163,6 +164,30 @@ export function FrequencyDial({
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-surface to-transparent"
         />
+
+        {/*
+         * Dragging a scale is fiddly on a phone and there is no keyboard on a
+         * touch screen, so the arrow keys the slider already understands are
+         * not reachable there. These give the same two steps something to press.
+         */}
+        <button
+          type="button"
+          onClick={() => select(value - 1)}
+          disabled={value <= 0}
+          aria-label={`Previous: ${entries[value - 1]?.label ?? "none"}`}
+          className="absolute top-1/2 left-1 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface/80 text-muted backdrop-blur-sm transition hover:text-text disabled:pointer-events-none disabled:opacity-0"
+        >
+          <ChevronLeft className="size-5" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          onClick={() => select(value + 1)}
+          disabled={value >= count - 1}
+          aria-label={`Next: ${entries[value + 1]?.label ?? "none"}`}
+          className="absolute top-1/2 right-1 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface/80 text-muted backdrop-blur-sm transition hover:text-text disabled:pointer-events-none disabled:opacity-0"
+        >
+          <ChevronRight className="size-5" aria-hidden="true" />
+        </button>
       </div>
     </div>
   );
