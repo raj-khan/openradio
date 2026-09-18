@@ -25,6 +25,36 @@ describe("goatcounterOrigin", () => {
     expect(goatcounterOrigin("http://insecure.example")).toBeNull();
     expect(goatcounterOrigin("not a url")).toBeNull();
   });
+
+  it("rejects a site code pasted in place of a URL", () => {
+    // This shipped: "1287" became https://0.0.5.7, so the counter pixel pointed
+    // into the visitor's own network and Chrome prompted every one of them.
+    expect(new URL("https://1287").origin).toBe("https://0.0.5.7"); // why it happens
+    expect(goatcounterOrigin("1287")).toBeNull();
+    expect(goatcounterOrigin("https://1287")).toBeNull();
+  });
+
+  it("rejects hosts that are not public domains", () => {
+    for (const value of [
+      "https://0.0.5.7",
+      "https://127.0.0.1",
+      "https://192.168.1.10",
+      "https://[::1]",
+      "https://localhost",
+      "https://goatcounter",
+      "https://counter.local",
+      "https://counter.internal",
+    ]) {
+      expect(goatcounterOrigin(value), value).toBeNull();
+    }
+  });
+
+  it("still accepts ordinary domains, including subdomains", () => {
+    expect(goatcounterOrigin("stats.openradio.space")).toBe("https://stats.openradio.space");
+    expect(goatcounterOrigin("https://a.b.c.goatcounter.com")).toBe(
+      "https://a.b.c.goatcounter.com",
+    );
+  });
 });
 
 describe("countPixelUrl", () => {

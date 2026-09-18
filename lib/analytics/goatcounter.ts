@@ -9,10 +9,28 @@ export function goatcounterOrigin(raw = process.env.NEXT_PUBLIC_GOATCOUNTER_URL)
   try {
     const url = new URL(value.startsWith("http") ? value : `https://${value}`);
     if (url.protocol !== "https:") return null;
+    if (!isPublicHostname(url.hostname)) return null;
     return url.origin;
   } catch {
     return null;
   }
+}
+
+/*
+ * A site code pasted in place of a URL parses, and badly: URL expands integer
+ * shorthand, so "1287" becomes https://0.0.5.7. The browser then treats the
+ * counter pixel as a request into the visitor's own network and asks them to
+ * allow it, which is alarming and pointless. Anything that is not a real
+ * public domain is treated as misconfiguration, so counting stays off.
+ */
+function isPublicHostname(hostname: string): boolean {
+  const host = hostname.replace(/^\[|\]$/g, "");
+  if (host.includes(":")) return false; // IPv6 literal
+  if (/^[\d.]+$/.test(host)) return false; // IPv4 literal or integer shorthand
+  if (!host.includes(".")) return false; // "localhost", a bare word, a site code
+  return !/(^|\.)(localhost|local|internal|localdomain|home\.arpa|test|invalid|example)$/i.test(
+    host,
+  );
 }
 
 /** Pixel URL that records one page view. No cookies, no identifiers. */
