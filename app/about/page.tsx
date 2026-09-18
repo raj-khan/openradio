@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ABOUT_SECTIONS } from "@/lib/copy/about";
 import { allImages } from "@/lib/imagery/catalog";
 import { REPO_URL, SITE_DESCRIPTION } from "@/lib/site";
 
@@ -9,28 +10,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
-const SECTIONS = [
-  {
-    title: "What it is",
-    body: "OpenRadio is an open-source way to explore live internet radio from around the world. Tune by place, mood, language or genre, describe what you want to hear, or let it surprise you.",
-  },
-  {
-    title: "Where the stations come from",
-    body: "Station listings come from Radio Browser, a free, community-maintained directory. OpenRadio does not host, record or rebroadcast any audio: your browser connects directly to each station's own stream.",
-  },
-  {
-    title: "Your privacy",
-    body: "No accounts and no tracking. Favorites and listening history are stored only in your browser. When now playing information is shown, our server reads the station's public stream metadata for you. If a visit counter is switched on, it counts page views only, with no cookies and no personal data, and its numbers are public.",
-  },
-  {
-    title: "Culture and faith",
-    body: "Stations appear under faith, culture or language only when their broadcasters tag them that way. OpenRadio never infers religion or ethnicity from a country, language or name.",
-  },
-  {
-    title: "AI, optionally",
-    body: "Discovery works with plain keywords. If the site owner configures an AI model, it may help interpret requests, but stations and streams always come from the directory, never from AI.",
-  },
-];
 
 export default function AboutPage() {
   const credits = allImages();
@@ -43,7 +22,7 @@ export default function AboutPage() {
       </header>
 
       <div className="space-y-8">
-        {SECTIONS.map((section) => (
+        {ABOUT_SECTIONS.map((section) => (
           <section key={section.title} className="space-y-2">
             <h2 className="text-2xl font-semibold">{section.title}</h2>
             <p className="leading-relaxed text-muted">{section.body}</p>
