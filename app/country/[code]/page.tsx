@@ -16,6 +16,7 @@ export async function generateMetadata({
     title: `Radio from ${country.name}`,
     description: `Listen to live radio stations from ${country.name}.`,
     path: `/country/${country.code.toLowerCase()}`,
+    images: [`/country/${country.code.toLowerCase()}/opengraph-image`],
   });
 }
 

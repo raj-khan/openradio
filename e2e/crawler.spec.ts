@@ -133,3 +133,22 @@ for (const { path, title } of SHAREABLE) {
     expect(meta(html, "og:image"), "og:image").toMatch(/^https?:\/\//);
   });
 }
+
+test("a shared station previews with that station, not the home page", async ({ request }) => {
+  // Every page used to share the same tuner card, so a station link said
+  // nothing about what had been shared.
+  const html = await fetchAsCrawler(request, `/station/${TOKYO}`);
+  const image = meta(html, "og:image");
+  expect(image, "station pages have their own card").toContain(`/station/${TOKYO}/opengraph-image`);
+
+  const response = await request.get(new URL(image!).pathname);
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toContain("image/png");
+
+  for (const [path, own] of [
+    ["/country/jp", "/country/jp/opengraph-image"],
+    ["/tag/jazz", "/tag/jazz/opengraph-image"],
+  ]) {
+    expect(meta(await fetchAsCrawler(request, path), "og:image"), path).toContain(own);
+  }
+});

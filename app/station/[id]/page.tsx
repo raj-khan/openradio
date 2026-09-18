@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: PageProps<"/station/[id]">): 
     title: country ? `${station.name} (${country})` : station.name,
     description,
     path: `/station/${station.id}`,
+    images: [`/station/${station.id}/opengraph-image`],
   });
 }
 

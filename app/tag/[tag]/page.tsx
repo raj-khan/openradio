@@ -13,6 +13,7 @@ export async function generateMetadata({ params }: PageProps<"/tag/[tag]">): Pro
     title: `${mood && mood.primaryTag === tag ? mood.label : titleCase(tag)} radio`,
     description: `Listen to live ${tag} radio stations from around the world.`,
     path: `/tag/${encodeURIComponent(tag)}`,
+    images: [`/tag/${encodeURIComponent(tag)}/opengraph-image`],
   });
 }
 

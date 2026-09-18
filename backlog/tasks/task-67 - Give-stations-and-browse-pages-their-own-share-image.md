@@ -1,9 +1,10 @@
 ---
 id: TASK-67
 title: Give stations and browse pages their own share image
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-18 13:24'
+updated_date: '2026-09-18 17:57'
 labels:
   - seo
 dependencies: []
@@ -23,3 +24,9 @@ Every page shares the same generic tuner image, so a station link on WhatsApp or
 - [ ] #3 Images stay within the platform size limits and are cached
 - [ ] #4 Falls back to the site image when a station cannot be loaded
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Station, country and tag pages now render their own share card from one shared layout in lib/seo/share-image.tsx, which the site card was refactored onto so there is a single design rather than a second look. A station previews with its country, name and genre; country and tag pages name the place or genre. Cached for a day, since a popular station is scraped far more often than it is played, and a station that cannot be loaded still gets the site card rather than nothing. The catch worth recording: pageMetadata declares openGraph explicitly, which replaces the root's object, so Next does not fold in a route's own opengraph-image file. Each of the three pages has to name its image path, otherwise the file exists and is never referenced. Verified by fetching the generated PNGs (200 image/png, 54-66KB) and reading them: the RTL card shows France, RTL, généraliste in the existing design.
+<!-- SECTION:FINAL_SUMMARY:END -->
