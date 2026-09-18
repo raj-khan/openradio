@@ -10,11 +10,9 @@ import { SurpriseButton } from "@/components/discovery/surprise-button";
 import { FrequencyDial } from "@/components/tuner/frequency-dial";
 import { EqualizerBars } from "@/components/tuner/equalizer-bars";
 import type { Place } from "@/lib/imagery/catalog";
-import { useListeningMode } from "@/lib/library/listening-mode-store";
 import { usePlayerStore } from "@/lib/player/store";
-import { matchesMode, meetsQualityFloor, MODE_LABELS } from "@/lib/stations/listening-mode";
+import { useTuner } from "@/lib/player/use-tuner";
 import { countryFlag, countryName } from "@/lib/stations/display";
-import type { Station } from "@/lib/stations/types";
 import { stationFrequency } from "@/lib/tuner/frequency";
 
 interface HeroTunerProps {
@@ -24,8 +22,7 @@ interface HeroTunerProps {
 
 export function HeroTuner({ places, counts }: HeroTunerProps) {
   const [index, setIndex] = useState(0);
-  const [tuning, setTuning] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const tuner = useTuner();
   const playing = usePlayerStore((s) => s.status === "playing");
   const currentCountry = usePlayerStore((s) => s.station?.countryCode);
 
@@ -33,38 +30,14 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
   const count = counts[place.countryCode];
   const onAir = playing && currentCountry === place.countryCode;
 
-  const tuneIn = async () => {
-    setTuning(true);
-    setMessage(null);
-    try {
-      // Ask for the largest page the directory serves. Thirty was not enough:
-      // Japan has 3 voice stations in its top 30 and 5 in its top 100, France
-      // 8 against 22, so the filter looked empty when it was only short-sighted.
-      const response = await fetch(`/api/stations?country=${place.countryCode}&limit=100`);
-      const body: { stations?: Station[] } = await response.json();
-      const live = (body.stations ?? []).filter((s) => s.lastCheckOk && meetsQualityFloor(s));
-      const mode = useListeningMode.getState().mode;
-      const candidates = live.filter((s) => matchesMode(s, mode));
-
-      if (candidates.length === 0) {
-        // Falling back to music while the listener has asked for voices hides
-        // the gap from them and from us. Say what happened instead.
-        setMessage(
-          live.length > 0 && mode !== "any"
-            ? `No ${MODE_LABELS[mode].toLowerCase()} stations in ${place.city} right now. Try another place, or switch to Anything.`
-            : "Couldn't find a live station there right now. Try another place.",
-        );
-        return;
-      }
-
-      const station = candidates[Math.floor(Math.random() * Math.min(candidates.length, 8))];
-      usePlayerStore.getState().play(station);
-    } catch {
-      setMessage("Couldn't find a live station there right now. Try another place.");
-    } finally {
-      setTuning(false);
-    }
-  };
+  const tuneIn = () =>
+    tuner.tune((mode) => {
+      const query = new URLSearchParams({ country: place.countryCode });
+      if (mode !== "any") query.set("mode", mode);
+      // Same endpoint Surprise uses, so the dial gets the same reachability
+      // check and the same list of alternates to fall back on.
+      return fetch(`/api/surprise?${query}`, { cache: "no-store" });
+    }, `Couldn't find a live station in ${place.city} right now. Try another place.`);
 
   const visible = new Set([index - 1, index, index + 1]);
 
@@ -128,10 +101,10 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
             <button
               type="button"
               onClick={tuneIn}
-              disabled={tuning}
+              disabled={tuner.loading}
               className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-6 font-medium text-accent-contrast shadow-[0_0_30px_color-mix(in_oklab,var(--accent)_45%,transparent)] transition hover:scale-[1.02] disabled:opacity-70"
             >
-              {tuning ? (
+              {tuner.loading ? (
                 <Loader2 className="size-5 animate-spin" aria-hidden="true" />
               ) : (
                 <Play className="size-5" aria-hidden="true" />
@@ -148,9 +121,16 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
           </div>
           <ListeningModeToggle />
           <SurpriseButton />
-          {message && (
+          {tuner.error && (
             <p role="alert" className="text-sm text-[var(--accent-alt)]">
-              {message}
+              {tuner.error}
+            </p>
+          )}
+          {tuner.skipped > 0 && !tuner.error && (
+            <p aria-live="polite" className="text-sm text-white/70">
+              {tuner.skipped === 1
+                ? "That one was off the air, so here is another."
+                : `Stepped past ${tuner.skipped} stations that were off the air.`}
             </p>
           )}
         </div>

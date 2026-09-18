@@ -88,3 +88,39 @@ describe("GET /api/surprise", () => {
     expect((await response.json()).station.id).toBe("a");
   });
 });
+
+describe("GET /api/surprise?country=", () => {
+  it("keeps to the country the dial asked for, and takes a full page", async () => {
+    search.mockResolvedValue([makeStation("a", { countryCode: "BD", bitrate: 128 })]);
+    const body = await (await GET(new Request("http://localhost/api/surprise?country=bd"))).json();
+    expect(body.station.id).toBe("a");
+    expect(search.mock.calls[0][0]).toMatchObject({ country: "BD", limit: 100 });
+  });
+
+  it("says so rather than handing over music when a country has no voices", async () => {
+    // Cairo really does have no talk stations we can see. Falling back to music
+    // would hide that from the listener, which is what it used to do.
+    search.mockResolvedValue([
+      makeStation("m", { countryCode: "EG", bitrate: 128, tags: ["pop"] }),
+    ]);
+    const response = await GET(new Request("http://localhost/api/surprise?country=eg&mode=talk"));
+    expect(response.status).toBe(404);
+    expect((await response.json()).error).toMatch(/no voices stations/i);
+  });
+
+  it("still relaxes the mode when picking from the whole world", async () => {
+    // Somewhere else always exists, so refusing would be unhelpful here.
+    search.mockResolvedValue([
+      makeStation("m", { countryCode: "EG", bitrate: 128, tags: ["pop"] }),
+    ]);
+    const response = await GET(new Request("http://localhost/api/surprise?mode=talk"));
+    expect(response.status).toBe(200);
+    expect((await response.json()).station.id).toBe("m");
+  });
+
+  it("ignores a country that is not a two letter code", async () => {
+    search.mockResolvedValue([makeStation("a", { countryCode: "JP", bitrate: 128 })]);
+    await GET(new Request("http://localhost/api/surprise?country=bangladesh"));
+    expect(search.mock.calls[0][0].country).toBeUndefined();
+  });
+});

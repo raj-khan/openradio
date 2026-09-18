@@ -9,19 +9,26 @@ import type { Station } from "@/lib/stations/types";
 /** @deprecated Judged per station now: see minBitrateFor. Kept for callers. */
 export const MIN_SURPRISE_BITRATE = MIN_MUSIC_BITRATE;
 
-/** Stations good enough to surprise someone with. */
+/**
+ * Stations good enough to surprise someone with.
+ *
+ * `relaxMode` decides what happens when nothing matches. Drawing from the whole
+ * world there is always somewhere else to look, so falling back to any station
+ * beats refusing. Pinned to one country there is not, and quietly handing over
+ * music after someone asked for voices hides the gap from them: the caller
+ * passes false and reports the emptiness instead.
+ */
 export function surpriseCandidates(
   stations: Station[],
   excludeCountry?: string,
   mode: ListeningMode = "any",
+  relaxMode = true,
 ): Station[] {
   const good = stations.filter(
     (s) => s.lastCheckOk && Boolean(s.countryCode) && meetsQualityFloor(s),
   );
-  // Asking for voices and getting none is worse than hearing the same country
-  // twice, so the mode holds even when it leaves us little to choose from.
   const wanted = good.filter((s) => matchesMode(s, mode));
-  const pool = wanted.length > 0 ? wanted : good;
+  const pool = wanted.length > 0 || !relaxMode ? wanted : good;
   const elsewhere = excludeCountry ? pool.filter((s) => s.countryCode !== excludeCountry) : pool;
   return elsewhere.length > 0 ? elsewhere : pool;
 }
