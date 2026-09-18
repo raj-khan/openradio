@@ -26,6 +26,7 @@ function entryPoints(): string[] {
       "/about",
       "what OpenRadio is, where the stations come from, and the privacy terms",
     ),
+    link("FAQ", "/faq", "what it costs, what it stores, and why a station goes quiet"),
   ];
 }
 

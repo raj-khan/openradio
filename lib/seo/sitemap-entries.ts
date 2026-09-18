@@ -17,7 +17,7 @@ export interface SitemapInput {
 }
 
 export function sitemapPaths({ countries, languages, tags }: SitemapInput): string[] {
-  const paths = new Set<string>(["/", "/search", "/discover", "/about"]);
+  const paths = new Set<string>(["/", "/search", "/discover", "/about", "/faq"]);
   for (const place of PLACES) paths.add(`/country/${place.countryCode.toLowerCase()}`);
   for (const mood of MOODS) paths.add(`/tag/${encodeURIComponent(mood.primaryTag)}`);
   countries

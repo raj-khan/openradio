@@ -17,7 +17,10 @@ export const MAIN_NAV: NavItem[] = [
   { href: "/history", label: "History" },
 ];
 
-export const FOOTER_NAV: NavItem[] = [{ href: "/about", label: "About" }];
+export const FOOTER_NAV: NavItem[] = [
+  { href: "/about", label: "About" },
+  { href: "/faq", label: "FAQ" },
+];
 
 /** Every path the site links to from its own chrome. */
 export function navigablePaths(): string[] {

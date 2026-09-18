@@ -156,3 +156,21 @@ export function breadcrumbJsonLd(trail: { name: string; path: string }[]): JsonL
     })),
   };
 }
+
+/**
+ * Question and answer pairs. Answer engines quote these readily, so the text
+ * here is exactly the text on the page: never a summary of it.
+ */
+export function faqJsonLd(items: { question: string; answer: string }[]): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${absolute("/faq")}#faq`,
+    isPartOf: { "@id": `${siteUrl().toString()}#website` },
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+}
