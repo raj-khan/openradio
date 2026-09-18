@@ -56,6 +56,25 @@ export function httpUrl(value: unknown): string | undefined {
   }
 }
 
+/*
+ * A station logo loaded over http on an https page is mixed content: Chrome
+ * shows "Connection is not fully secure. Attackers might be able to see the
+ * images that you are looking at on this site and trick you by modifying them",
+ * over the whole site, because of one directory entry.
+ *
+ * Almost all of these hosts serve the same file over https and simply have the
+ * old address recorded: of 14 insecure logos sampled from the live directory,
+ * 13 answered on https unchanged. So the address is upgraded rather than
+ * proxied, which keeps the logos without spending bandwidth or standing up
+ * another endpoint that fetches arbitrary URLs. The rest fail to load and fall
+ * back to the generated artwork, which is what happens to a broken logo anyway.
+ */
+export function secureImageUrl(value: unknown): string | undefined {
+  const url = httpUrl(value);
+  if (!url) return undefined;
+  return url.startsWith("http://") ? `https://${url.slice("http://".length)}` : url;
+}
+
 /** Split a comma separated list, lowercase, trim and dedupe. */
 export function splitList(value: unknown, max = Number.POSITIVE_INFINITY): string[] {
   const raw = text(value);
@@ -98,7 +117,7 @@ export function normalizeStation(raw: RawRadioBrowserStation): Station | null {
     name: name.replace(/\s+/g, " ").slice(0, 120),
     streamUrl,
     homepageUrl: httpUrl(raw.homepage),
-    faviconUrl: httpUrl(raw.favicon),
+    faviconUrl: secureImageUrl(raw.favicon),
     country: text(raw.country),
     countryCode: countryCode && /^[A-Z]{2}$/.test(countryCode) ? countryCode : undefined,
     state: text(raw.state),

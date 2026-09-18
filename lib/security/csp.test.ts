@@ -16,12 +16,19 @@ describe("buildCsp", () => {
     expect(csp).not.toContain("unsafe-eval");
   });
 
-  it("allows external station media, artwork and HLS segments", () => {
+  it("allows external station media and HLS segments", () => {
     expect(directive(csp, "media-src")).toEqual(
       expect.arrayContaining(["https:", "http:", "blob:"]),
     );
-    expect(directive(csp, "img-src")).toEqual(expect.arrayContaining(["https:", "http:"]));
     expect(directive(csp, "connect-src")).toEqual(expect.arrayContaining(["https:"]));
+  });
+
+  it("refuses insecure images, which put a warning on the whole site", () => {
+    // One station logo served over http made Chrome report the site as not
+    // fully secure. Logos are upgraded to https when normalized; one that
+    // cannot be is blocked here and falls back to the generated artwork.
+    expect(directive(csp, "img-src")).toEqual(expect.arrayContaining(["https:", "data:", "blob:"]));
+    expect(directive(csp, "img-src")).not.toContain("http:");
   });
 
   it("blocks plugins, framing and base tag hijacking", () => {

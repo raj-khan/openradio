@@ -4,6 +4,7 @@ import {
   normalizeFacets,
   normalizeStation,
   normalizeStations,
+  secureImageUrl,
   splitList,
 } from "@/lib/stations/normalize";
 
@@ -142,5 +143,50 @@ describe("normalizeFacets", () => {
       { name: "Japan", code: "JP", stationCount: 7 },
       { name: "jazz", stationCount: 7 },
     ]);
+  });
+});
+
+describe("secureImageUrl", () => {
+  it("upgrades an insecure logo to https", () => {
+    // Real entry: one of these put a security warning on the whole site.
+    expect(secureImageUrl("http://cdn-profiles.tunein.com/s24948/images/logoq.jpg")).toBe(
+      "https://cdn-profiles.tunein.com/s24948/images/logoq.jpg",
+    );
+  });
+
+  it("leaves a secure one alone", () => {
+    expect(secureImageUrl("https://example.com/logo.png")).toBe("https://example.com/logo.png");
+  });
+
+  it("keeps the path, query and port intact", () => {
+    expect(secureImageUrl("http://host.test:8080/a/b.png?t=1")).toBe(
+      "https://host.test:8080/a/b.png?t=1",
+    );
+  });
+
+  it("rejects what httpUrl rejects", () => {
+    expect(secureImageUrl("javascript:alert(1)")).toBeUndefined();
+    expect(secureImageUrl("http://user:pass@host.test/x.png")).toBeUndefined();
+    expect(secureImageUrl(undefined)).toBeUndefined();
+    expect(secureImageUrl("not a url")).toBeUndefined();
+  });
+
+  it("does not rewrite a host that merely starts with http", () => {
+    expect(secureImageUrl("https://httpbin.test/logo.png")).toBe("https://httpbin.test/logo.png");
+  });
+});
+
+describe("station logos are never insecure", () => {
+  it("upgrades the favicon but leaves the stream address untouched", () => {
+    const station = normalizeStation({
+      stationuuid: "a",
+      name: "Test",
+      url: "http://stream.test/live",
+      favicon: "http://logos.test/icon.png",
+    });
+    expect(station?.faviconUrl).toBe("https://logos.test/icon.png");
+    // Streams are a separate problem: upgrading one that does not answer on
+    // https would break playback outright. Tracked in TASK-72.
+    expect(station?.streamUrl).toBe("http://stream.test/live");
   });
 });

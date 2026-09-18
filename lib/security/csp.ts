@@ -16,7 +16,10 @@ export function buildCsp(nonce: string, { dev = false } = {}): string {
     ],
     // React style attributes (station hues, photo placeholders) need inline styles.
     "style-src": ["'self'", "'unsafe-inline'"],
-    "img-src": ["'self'", "data:", "blob:", "https:", "http:"],
+    // No http: here. One station logo served insecurely puts a warning on the
+    // whole site, so an address we could not upgrade is blocked and the station
+    // falls back to its generated artwork.
+    "img-src": ["'self'", "data:", "blob:", "https:"],
     "media-src": ["'self'", "blob:", "https:", "http:"],
     "connect-src": ["'self'", "https:", "http:", ...(dev ? ["ws:"] : [])],
     "font-src": ["'self'"],
