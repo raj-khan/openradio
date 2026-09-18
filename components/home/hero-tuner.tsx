@@ -12,7 +12,7 @@ import { EqualizerBars } from "@/components/tuner/equalizer-bars";
 import type { Place } from "@/lib/imagery/catalog";
 import { useListeningMode } from "@/lib/library/listening-mode-store";
 import { usePlayerStore } from "@/lib/player/store";
-import { matchesMode, meetsQualityFloor } from "@/lib/stations/listening-mode";
+import { matchesMode, meetsQualityFloor, MODE_LABELS } from "@/lib/stations/listening-mode";
 import { countryFlag, countryName } from "@/lib/stations/display";
 import type { Station } from "@/lib/stations/types";
 import { stationFrequency } from "@/lib/tuner/frequency";
@@ -37,16 +37,27 @@ export function HeroTuner({ places, counts }: HeroTunerProps) {
     setTuning(true);
     setMessage(null);
     try {
-      // Ask for more than we need, so there is something left after filtering.
-      const response = await fetch(`/api/stations?country=${place.countryCode}&limit=30`);
+      // Ask for the largest page the directory serves. Thirty was not enough:
+      // Japan has 3 voice stations in its top 30 and 5 in its top 100, France
+      // 8 against 22, so the filter looked empty when it was only short-sighted.
+      const response = await fetch(`/api/stations?country=${place.countryCode}&limit=100`);
       const body: { stations?: Station[] } = await response.json();
       const live = (body.stations ?? []).filter((s) => s.lastCheckOk && meetsQualityFloor(s));
       const mode = useListeningMode.getState().mode;
-      const wanted = live.filter((s) => matchesMode(s, mode));
-      // Somewhere with no talk station should still play, rather than refusing.
-      const candidates = wanted.length > 0 ? wanted : live;
+      const candidates = live.filter((s) => matchesMode(s, mode));
+
+      if (candidates.length === 0) {
+        // Falling back to music while the listener has asked for voices hides
+        // the gap from them and from us. Say what happened instead.
+        setMessage(
+          live.length > 0 && mode !== "any"
+            ? `No ${MODE_LABELS[mode].toLowerCase()} stations in ${place.city} right now. Try another place, or switch to Anything.`
+            : "Couldn't find a live station there right now. Try another place.",
+        );
+        return;
+      }
+
       const station = candidates[Math.floor(Math.random() * Math.min(candidates.length, 8))];
-      if (!station) throw new Error("none");
       usePlayerStore.getState().play(station);
     } catch {
       setMessage("Couldn't find a live station there right now. Try another place.");

@@ -1,9 +1,10 @@
 ---
 id: TASK-69
 title: Recognise speech stations that are not tagged in English
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-18 13:27'
+updated_date: '2026-09-18 13:54'
 labels:
   - bug
   - discovery
@@ -34,3 +35,9 @@ Two further faults make it worse. The dial fetches only 30 stations, and the dif
 - [ ] #4 When a country genuinely has none, say so rather than silently playing music
 - [ ] #5 Re-run the per-country measurement and show the before and after
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Three faults, all fixed. Speech tags were English only, so Cuba's 'noticias', Turkey's 'haber', Morocco's 'actualites' and Egypt's 'اسلامي' and 'قران كريم' were invisible; the list now covers Spanish, Portuguese, French, German, Dutch, Turkish, Italian, Arabic, Bengali, Hindi, Urdu, Indonesian, Russian and East Asian terms. Many speech stations carry no useful tag at all, so the name is now a secondary signal, deliberately narrow and whole-word only. And the dial fetched 30 stations where the directory serves 100, which alone was hiding most of them. Measured before and after across all 16 countries: Bangladesh 1 to 3, India 1 to 8, Egypt 0 to 2, Mexico 0 to 4, Turkey 1 to 7, and the wider sample lifted Brazil 4 to 24, France 8 to 23, Germany 11 to 26. Mexico and Turkey were rescued entirely by name detection finding 88.9 Noticias, MVS Noticias, a HABER and Habertürk Radyo. Cuba remains thin at 1 because Radio Reloj announces itself as a clock, which is exactly why the silent fallback had to go: asking for Voices and being handed music now says so instead of pretending.
+<!-- SECTION:FINAL_SUMMARY:END -->

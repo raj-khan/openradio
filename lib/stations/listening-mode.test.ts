@@ -7,6 +7,7 @@ import {
   MIN_MUSIC_BITRATE,
   MIN_SPEECH_BITRATE,
   minBitrateFor,
+  nameSuggestsSpeech,
 } from "@/lib/stations/listening-mode";
 import { surpriseCandidates } from "@/lib/stations/surprise";
 import { makeStation } from "@/test/fixtures";
@@ -95,5 +96,54 @@ describe("surpriseCandidates with a mode", () => {
     // Somewhere with no talk station should still play something.
     const musicOnly = [music("m1", 128)];
     expect(surpriseCandidates(musicOnly, undefined, "talk")).toHaveLength(1);
+  });
+});
+
+describe("speech stations that are not tagged in English", () => {
+  const tagged = (tag: string) => makeStation("a", { tags: [tag] });
+
+  it("recognises the tags these countries actually use", () => {
+    // Each of these was returning nothing for Voices before.
+    for (const tag of ["noticias", "haber", "haberler", "actualités", "nachrichten", "berita"]) {
+      expect(isSpeechStation(tagged(tag)), tag).toBe(true);
+    }
+    for (const tag of ["اسلامي", "قران كريم", "أخبار", "খবর", "новости", "뉴스"]) {
+      expect(isSpeechStation(tagged(tag)), tag).toBe(true);
+    }
+  });
+
+  it("falls back to the name when the tags say nothing useful", () => {
+    // Real stations: tagged with frequencies and network names, or not at all.
+    const byName = [
+      { name: "88.9 Noticias - 88.9 FM - XHM-FM", tags: ["88.9", "acir", "américa"] },
+      { name: "a HABER", tags: [] },
+      { name: "Habertürk Radyo", tags: [] },
+      { name: "AL-QURAN BANGLA", tags: [] },
+      { name: "إذاعة القرآن الكريم من القاهرة", tags: ["classical"] },
+    ];
+    for (const { name, tags } of byName) {
+      expect(isSpeechStation(makeStation("a", { name, tags })), name).toBe(true);
+    }
+  });
+
+  it("does not mistake music stations for speech", () => {
+    for (const name of ["Radio Paradise Main Mix", "Jazz24", "Newcastle Rock FM", "Kiss FM"]) {
+      expect(isSpeechStation(makeStation("a", { name, tags: ["pop"] })), name).toBe(false);
+    }
+  });
+
+  it("matches whole words, so a name that merely contains one does not count", () => {
+    expect(nameSuggestsSpeech("Newstalk 106")).toBe(true);
+    expect(nameSuggestsSpeech("88.9 Noticias")).toBe(true);
+    expect(nameSuggestsSpeech("Renewal FM"), "renewal is not news").toBe(false);
+    expect(nameSuggestsSpeech("Talkin' Blues"), "a blues show, not talk radio").toBe(false);
+  });
+
+  it("does not pretend to catch every station", () => {
+    // Cuba's Radio Reloj is a 24 hour news station that announces itself as a
+    // clock. Nothing in its name or tags says news, and we do not guess.
+    expect(
+      isSpeechStation(makeStation("a", { name: "Radio Reloj Cuba 950 AM", tags: ["icrt"] })),
+    ).toBe(false);
   });
 });
