@@ -1,9 +1,10 @@
 ---
 id: TASK-58
 title: Add a crawler smoke test
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-18 08:01'
+updated_date: '2026-09-18 12:57'
 labels:
   - seo
   - test
@@ -24,3 +25,9 @@ Most AI crawlers and some search crawlers do not run JavaScript, so a regression
 - [ ] #3 Asserts station names appear in raw HTML without hydration
 - [ ] #4 Runs in CI
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added e2e/crawler.spec.ts: 11 tests that fetch pages over plain HTTP with a GPTBot user agent and run no JavaScript, which is how most AI crawlers and some search crawlers actually read the site. Asserts title, meta description and canonical on eight routes, real station names present in the raw markup rather than an empty shell, the expected JSON-LD types per page (Organization, WebSite, SoftwareApplication, RadioBroadcastService, BreadcrumbList, FAQPage, CollectionPage), that robots.txt names the AI crawlers and points at the sitemap, that llms.txt and llms-full.txt serve, that the sitemap contains station URLs, and that /favorites and /history still declare noindex. Proved the assertions bite by deleting the layout's JSON-LD and confirming exactly one test failed and the rest still passed.
+<!-- SECTION:FINAL_SUMMARY:END -->
