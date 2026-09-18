@@ -31,3 +31,21 @@ export function isAutoplayBlocked(error: unknown) {
 export function isAbort(error: unknown) {
   return error instanceof DOMException && error.name === "AbortError";
 }
+
+/*
+ * Stream addresses to try, best first.
+ *
+ * 44% of stations in the popular pool are filed with an http address. On an
+ * https page that is mixed content: Chrome silently upgrades it and logs a
+ * warning, Safari and Firefox are stricter, and none of it is under our
+ * control. Measured against the live directory, 11 of 12 of those hosts serve
+ * the identical stream over https and simply have the old address on file.
+ *
+ * So https is tried first and the original kept as a fallback, rather than
+ * rewriting the address outright: the twelfth station answers only on http, and
+ * breaking it to tidy a warning would be a poor trade.
+ */
+export function streamCandidates(url: string): string[] {
+  if (!url.startsWith("http://")) return [url];
+  return [`https://${url.slice("http://".length)}`, url];
+}

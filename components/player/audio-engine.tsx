@@ -11,6 +11,7 @@ import {
   isAutoplayBlocked,
   shouldRetry,
   sourceStrategy,
+  streamCandidates,
 } from "@/lib/player/engine-utils";
 import { useHistory } from "@/lib/library/history";
 import { usePlayerStore } from "@/lib/player/store";
@@ -25,6 +26,8 @@ export function AudioEngine() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const attemptRef = useRef(0);
+  // Which stream address we are on: https first, the station's own as fallback.
+  const candidateRef = useRef(0);
   const reportedRef = useRef<number>(-1);
   const timersRef = useRef<{ retry?: number; timeout?: number }>({});
 
@@ -81,6 +84,15 @@ export function AudioEngine() {
 
     const fail = (message = STREAM_ERROR) => {
       if (!isCurrent()) return;
+      // A station filed under http may simply not answer on https. Fall back to
+      // the address it gave us before counting this as a failure.
+      const candidates = streamCandidates(station.streamUrl);
+      if (message === STREAM_ERROR && candidateRef.current + 1 < candidates.length) {
+        candidateRef.current += 1;
+        attemptRef.current = 0;
+        timers.retry = window.setTimeout(() => isCurrent() && start(station), RETRY_DELAY_MS);
+        return;
+      }
       if (message === STREAM_ERROR && shouldRetry(attemptRef.current)) {
         attemptRef.current += 1;
         timers.retry = window.setTimeout(() => isCurrent() && start(station), RETRY_DELAY_MS);
@@ -130,10 +142,12 @@ export function AudioEngine() {
         hls.on(HlsClass.Events.ERROR, (_event, data) => {
           if (data.fatal) fail();
         });
-        hls.loadSource(target.streamUrl);
+        const candidates = streamCandidates(target.streamUrl);
+        hls.loadSource(candidates[Math.min(candidateRef.current, candidates.length - 1)]);
         hls.attachMedia(audio!);
       } else {
-        audio!.src = target.streamUrl;
+        const candidates = streamCandidates(target.streamUrl);
+        audio!.src = candidates[Math.min(candidateRef.current, candidates.length - 1)];
         audio!.load();
       }
       tryPlay();
@@ -143,6 +157,7 @@ export function AudioEngine() {
     if (audio.dataset.session !== String(session)) {
       audio.dataset.session = String(session);
       attemptRef.current = 0;
+      candidateRef.current = 0;
       void start(station);
     } else if (hlsRef.current) {
       tryPlay();
@@ -183,6 +198,21 @@ export function AudioEngine() {
       // Errors after teardown (empty src) or while paused are not stream failures.
       if (!audio.getAttribute("src") && !hlsRef.current) return;
       if (state.status === "paused" || state.status === "idle") return;
+
+      // Move to the station's own address before retrying: retrying the https
+      // guess against a host that does not serve https would only fail again.
+      const candidates = state.station ? streamCandidates(state.station.streamUrl) : [];
+      if (!hlsRef.current && candidateRef.current + 1 < candidates.length) {
+        candidateRef.current += 1;
+        attemptRef.current = 0;
+        timers.retry = window.setTimeout(() => {
+          audio.src = candidates[candidateRef.current];
+          audio.load();
+          audio.play().catch(() => {});
+        }, RETRY_DELAY_MS);
+        return;
+      }
+
       if (shouldRetry(attemptRef.current)) {
         attemptRef.current += 1;
         timers.retry = window.setTimeout(() => {

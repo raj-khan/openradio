@@ -20,6 +20,10 @@ export function buildCsp(nonce: string, { dev = false } = {}): string {
     // whole site, so an address we could not upgrade is blocked and the station
     // falls back to its generated artwork.
     "img-src": ["'self'", "data:", "blob:", "https:"],
+    // http: stays, deliberately. The player tries https for every station and
+    // falls back to the address the directory gave, and a minority of stations
+    // answer only on http. Blocking those to tidy a console warning would break
+    // playback outright, which is the worse trade.
     "media-src": ["'self'", "blob:", "https:", "http:"],
     "connect-src": ["'self'", "https:", "http:", ...(dev ? ["ws:"] : [])],
     "font-src": ["'self'"],
