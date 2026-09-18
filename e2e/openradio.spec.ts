@@ -90,3 +90,41 @@ test("unknown pages render the off the dial screen", async ({ page }) => {
   expect(response?.status()).toBe(404);
   await expect(page.getByRole("heading", { name: "Off the dial" })).toBeVisible();
 });
+
+test("history fits a phone screen with long station names @mobile", async ({ page }) => {
+  // A fixed side gutter for the timestamp used to squeeze the card until the
+  // page scrolled sideways, so seed the longest name we have seen in the wild.
+  await page.goto("/");
+  await page.evaluate(() => {
+    const station = {
+      id: "22222222-2222-4222-8222-222222222222",
+      name: "CAPITAL - The UK's No.1 Hit Music Station",
+      streamUrl: "https://example.invalid/stream",
+      country: "United Kingdom",
+      countryCode: "GB",
+      languages: ["english"],
+      tags: ["capital", "capital fm", "contemporary hits radio"],
+      codec: "MP3",
+      bitrate: 128,
+      isHls: false,
+      votes: 0,
+      clickCount: 0,
+      lastCheckOk: true,
+      source: "radio-browser",
+    };
+    localStorage.setItem(
+      "openradio:history",
+      JSON.stringify({ state: { entries: [{ station, playedAt: Date.now() }] }, version: 1 }),
+    );
+  });
+
+  await page.goto("/history");
+  // Direct children only: each card nests a tag list of its own.
+  await expect(page.getByRole("list", { name: "Recently played" }).locator("> li")).toHaveCount(1);
+
+  const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }));
+  expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+});

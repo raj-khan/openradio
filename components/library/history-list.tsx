@@ -47,10 +47,15 @@ export function HistoryList() {
       <h2 className="sr-only">Recently played stations</h2>
       <ol className="grid max-w-3xl gap-2" aria-label="Recently played">
         {entries.map(({ station, playedAt }) => (
-          <li key={station.id} className="flex items-center gap-3">
+          // The timestamp sits above the card on a phone: as a fixed side
+          // gutter it took a fifth of the width and squeezed names to "CAPI...".
+          <li
+            key={station.id}
+            className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-3"
+          >
             <time
               dateTime={new Date(playedAt).toISOString()}
-              className="w-20 shrink-0 text-right font-mono text-[11px] text-muted uppercase"
+              className="font-mono text-[11px] text-muted uppercase sm:w-20 sm:shrink-0 sm:text-right"
             >
               {relativeTime(playedAt, now)}
             </time>
