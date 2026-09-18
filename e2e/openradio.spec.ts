@@ -16,9 +16,14 @@ test("dial tunes with the keyboard", async ({ page }) => {
   await page.goto("/");
   const dial = page.getByRole("slider", { name: "Tune to a city" });
   await dial.focus();
+  // The opening place rotates every cache window, so assert movement rather
+  // than a particular city: pinning one made this pass only some of the time.
+  const before = await dial.getAttribute("aria-valuetext");
+  expect(before).toBeTruthy();
   await page.keyboard.press("ArrowRight");
-  await expect(dial).toHaveAttribute("aria-valuetext", "Dhaka");
-  await expect(page.getByRole("button", { name: "Tune in to Dhaka" })).toBeVisible();
+  await expect(dial).not.toHaveAttribute("aria-valuetext", before!);
+  const after = await dial.getAttribute("aria-valuetext");
+  await expect(page.getByRole("button", { name: `Tune in to ${after}` })).toBeVisible();
 });
 
 test("search filters sync with the URL", async ({ page }) => {

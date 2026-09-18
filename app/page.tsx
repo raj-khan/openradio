@@ -4,6 +4,7 @@ import { Shelf } from "@/components/discovery/shelf";
 import { HeroTuner } from "@/components/home/hero-tuner";
 import { StationGrid } from "@/components/stations/station-grid";
 import { MOODS, PLACES } from "@/lib/imagery/catalog";
+import { rotatePlaces } from "@/lib/imagery/rotation";
 import { loadFacets, loadStations } from "@/lib/stations/server-data";
 
 // Revalidate the home page data every 10 minutes.
@@ -15,13 +16,16 @@ export default async function Home() {
     loadStations({ order: "popular", limit: 15 }),
   ]);
 
+  // Same list every visit otherwise: the dial always opened on Tokyo.
+  const places = rotatePlaces(PLACES);
+
   const counts = Object.fromEntries(
     countries.filter((c) => c.code).map((c) => [c.code as string, c.stationCount]),
   );
 
   return (
     <div className="flex flex-col gap-16 pb-16">
-      <HeroTuner places={PLACES} counts={counts} />
+      <HeroTuner places={places} counts={counts} />
 
       <div className="mx-auto w-full max-w-6xl sm:px-4">
         <Shelf title="What's the mood?" eyebrow="Feel" itemClassName="w-72 sm:w-80">
@@ -39,7 +43,7 @@ export default async function Home() {
           hrefLabel="All countries"
           itemClassName="w-52 sm:w-60"
         >
-          {PLACES.map((place) => (
+          {places.map((place) => (
             <PlaceTile key={place.slug} place={place} stationCount={counts[place.countryCode]} />
           ))}
         </Shelf>
