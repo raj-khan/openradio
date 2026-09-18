@@ -1,4 +1,4 @@
-import { SITE_DESCRIPTION, SITE_NAME, siteUrl } from "@/lib/site";
+import { REPO_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteUrl } from "@/lib/site";
 import { countryName } from "@/lib/stations/display";
 import type { Station } from "@/lib/stations/types";
 
@@ -6,6 +6,65 @@ type JsonLd = Record<string, unknown>;
 
 function absolute(path: string): string {
   return new URL(path, siteUrl()).toString();
+}
+
+const MIT_LICENSE = "https://opensource.org/licenses/MIT";
+
+/**
+ * Who publishes OpenRadio. Without this the markup describes stations well and
+ * never says what the site itself is, which is the question an assistant asks
+ * first.
+ */
+export function organizationJsonLd(): JsonLd {
+  const url = siteUrl().toString();
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${url}#organization`,
+    name: SITE_NAME,
+    url,
+    description: SITE_DESCRIPTION,
+    slogan: SITE_TAGLINE,
+    logo: {
+      "@type": "ImageObject",
+      url: absolute("/icons/icon-512.png"),
+      width: 512,
+      height: 512,
+    },
+    sameAs: [REPO_URL],
+  };
+}
+
+/** The product itself: free, open source, runs in a browser. */
+export function softwareApplicationJsonLd(): JsonLd {
+  const url = siteUrl().toString();
+  return {
+    "@context": "https://schema.org",
+    "@type": ["SoftwareApplication", "WebApplication"],
+    "@id": `${url}#app`,
+    name: SITE_NAME,
+    url,
+    description: SITE_DESCRIPTION,
+    applicationCategory: "MultimediaApplication",
+    applicationSubCategory: "Internet radio player",
+    operatingSystem: "Any device with a web browser",
+    browserRequirements: "Requires JavaScript to play audio",
+    softwareRequirements: "No account, no installation",
+    isAccessibleForFree: true,
+    license: MIT_LICENSE,
+    // Free means free: state a zero price rather than leaving it unsaid.
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    featureList: [
+      "Live radio from every country",
+      "Search by country, language, genre and bitrate",
+      "Plain English discovery",
+      "Random station discovery",
+      "Favorites and listening history kept on the device",
+      "Works offline as an installable web app",
+    ],
+    publisher: { "@id": `${url}#organization` },
+    isPartOf: { "@id": `${url}#website` },
+  };
 }
 
 /** Site level data with the search box action. */
@@ -21,7 +80,8 @@ export function websiteJsonLd(): JsonLd {
     url,
     inLanguage: "en",
     isAccessibleForFree: true,
-    license: "https://opensource.org/licenses/MIT",
+    license: MIT_LICENSE,
+    publisher: { "@id": `${url}#organization` },
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -49,7 +109,7 @@ export function stationJsonLd(station: Station): JsonLd {
     ...(station.languages.length ? { inLanguage: station.languages } : {}),
     ...(country ? { areaServed: { "@type": "Country", name: country } } : {}),
     ...(station.tags.length ? { genre: station.tags.slice(0, 8) } : {}),
-    broadcastAffiliateOf: { "@type": "Organization", name: SITE_NAME, url: siteUrl().toString() },
+    broadcastAffiliateOf: { "@id": `${siteUrl().toString()}#organization` },
     isAccessibleForFree: true,
     potentialAction: {
       "@type": "ListenAction",

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   breadcrumbJsonLd,
+  organizationJsonLd,
+  softwareApplicationJsonLd,
   stationJsonLd,
   stationListJsonLd,
   websiteJsonLd,
@@ -72,5 +74,43 @@ describe("structured data", () => {
     const data = stationJsonLd(makeStation("x", { name: "</script><script>alert(1)</script>" }));
     expect(JSON.stringify(data)).toContain("</script>");
     expect(JSON.stringify(data).replace(/</g, "\\u003c")).not.toContain("</script>");
+  });
+});
+
+describe("entity data", () => {
+  const url = "https://openradio.space/";
+
+  it("says who publishes the site", () => {
+    const data = organizationJsonLd();
+    expect(data["@type"]).toBe("Organization");
+    expect(data["@id"]).toBe(`${url}#organization`);
+    expect(data.sameAs).toContain("https://github.com/raj-khan/openradio");
+    expect(isAbsolute((data.logo as Record<string, unknown>).url)).toBe(true);
+  });
+
+  it("describes the product as free software", () => {
+    const data = softwareApplicationJsonLd();
+    expect(data["@type"]).toEqual(["SoftwareApplication", "WebApplication"]);
+    expect(data.license).toBe("https://opensource.org/licenses/MIT");
+    expect(data.offers).toMatchObject({ price: "0" });
+    expect(data.isAccessibleForFree).toBe(true);
+    expect((data.featureList as string[]).length).toBeGreaterThan(3);
+  });
+
+  it("links the nodes by @id rather than repeating them", () => {
+    // A graph the crawler can join up, not three unrelated blobs.
+    expect(softwareApplicationJsonLd().publisher).toEqual({ "@id": `${url}#organization` });
+    expect(softwareApplicationJsonLd().isPartOf).toEqual({ "@id": `${url}#website` });
+    expect(websiteJsonLd().publisher).toEqual({ "@id": `${url}#organization` });
+    expect(stationJsonLd(makeStation("a")).broadcastAffiliateOf).toEqual({
+      "@id": `${url}#organization`,
+    });
+  });
+
+  it("gives every node a distinct @id", () => {
+    const ids = [organizationJsonLd(), websiteJsonLd(), softwareApplicationJsonLd()].map(
+      (node) => node["@id"],
+    );
+    expect(new Set(ids).size).toBe(3);
   });
 });

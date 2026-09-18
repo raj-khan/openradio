@@ -16,7 +16,11 @@ import { PlayerBar } from "@/components/player/player-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { goatcounterOrigin } from "@/lib/analytics/goatcounter";
-import { websiteJsonLd } from "@/lib/seo/structured-data";
+import {
+  organizationJsonLd,
+  softwareApplicationJsonLd,
+  websiteJsonLd,
+} from "@/lib/seo/structured-data";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -93,7 +97,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-        <JsonLd data={websiteJsonLd()} />
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd(), softwareApplicationJsonLd()]} />
         <AmbientBackground />
         <SiteHeader />
         <OfflineNotice />
