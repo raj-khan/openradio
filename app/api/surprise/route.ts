@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PROVIDER_UNAVAILABLE, apiError, logError } from "@/lib/api/responses";
 import { getStationProvider } from "@/lib/stations";
+import { dominantLanguage } from "@/lib/stations/languages";
 import { isListeningMode, MODE_LABELS, type ListeningMode } from "@/lib/stations/listening-mode";
 import { firstReachable } from "@/lib/stations/stream-probe";
 import { pickRandom, shuffle, surpriseCandidates } from "@/lib/stations/surprise";
@@ -14,6 +15,12 @@ export interface SurpriseResponse {
   station: Station;
   /** Fallbacks, best first, for when the chosen station fails in the browser. */
   alternates: Station[];
+  /**
+   * Set when the chosen country had nothing of the kind asked for and the
+   * search widened to its language. The listener asked for one place and is
+   * being given another, so the UI has to say so rather than quietly swap it.
+   */
+  widenedTo?: { language: string };
 }
 
 /**
@@ -54,11 +61,34 @@ export async function GET(request: Request) {
 
     // Within one country the mode is a promise, not a preference: being handed
     // music after asking for voices hides the gap instead of reporting it.
-    const candidates = shuffle(
+    let candidates = shuffle(
       country
         ? surpriseCandidates(stations, undefined, mode, false)
         : surpriseCandidates(stations, exclude, mode),
     );
+
+    /*
+     * Nothing of that kind there. Before refusing, try the country's own
+     * language somewhere else: 27% of countries with stations have no voice
+     * radio on file at all, and for a fifth of those the language finds real
+     * ones (Burkina Faso to French, Kosovo to Albanian, San Marino to Italian).
+     * Where no language clearly speaks for the country the refusal stands,
+     * which is why most tiny territories keep it.
+     */
+    let widenedTo: SurpriseResponse["widenedTo"];
+    if (country && mode !== "any" && candidates.length === 0) {
+      const language = dominantLanguage(stations);
+      if (language) {
+        const spoken = await getStationProvider().search(
+          stationQuerySchema.parse({ language, order: "popular", limit: MAX_LIMIT }),
+        );
+        const widened = surpriseCandidates(spoken, country, mode, false);
+        if (widened.length > 0) {
+          candidates = shuffle(widened);
+          widenedTo = { language };
+        }
+      }
+    }
 
     if (candidates.length === 0) {
       const label = MODE_LABELS[mode].toLowerCase();
@@ -78,6 +108,7 @@ export async function GET(request: Request) {
       {
         station,
         alternates: candidates.filter((s) => s.id !== station.id).slice(0, MAX_ALTERNATES),
+        ...(widenedTo ? { widenedTo } : {}),
       },
       { headers: { "Cache-Control": "no-store" } },
     );

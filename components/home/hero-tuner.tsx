@@ -138,6 +138,16 @@ export function HeroTuner({ places, counts, countries }: HeroTunerProps) {
                 : `Stepped past ${tuner.skipped} stations that were off the air.`}
             </p>
           )}
+          {/*
+           * The listener asked for one place and is hearing another, so this
+           * says so plainly rather than letting the swap pass unremarked.
+           */}
+          {tuner.widenedTo && !tuner.error && (
+            <p aria-live="polite" className="text-sm text-white/70">
+              Nothing on air there, so this is {tuner.widenedTo.language} radio from{" "}
+              {countryName(tuner.landed?.countryCode, tuner.landed?.country)}.
+            </p>
+          )}
         </div>
 
         <div className="space-y-4">

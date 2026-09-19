@@ -124,3 +124,55 @@ describe("GET /api/surprise?country=", () => {
     expect(search.mock.calls[0][0].country).toBeUndefined();
   });
 });
+
+describe("widening a country that has nothing of the kind asked for", () => {
+  beforeEach(() => {
+    search.mockReset();
+    reachable.mockReset();
+    reachable.mockResolvedValue(true);
+  });
+
+  const local = (id: string) =>
+    makeStation(id, { countryCode: "BF", languages: ["french"], tags: ["pop"], bitrate: 128 });
+
+  it("offers the country's language from elsewhere rather than refusing", async () => {
+    // Burkina Faso has six stations on file and no talk radio among them, but
+    // French voice radio is plentiful. A relevant station beats a dead end.
+    search
+      .mockResolvedValueOnce([local("a"), local("b"), local("c"), local("d"), local("e")])
+      .mockResolvedValueOnce([
+        makeStation("rmc", {
+          countryCode: "FR",
+          languages: ["french"],
+          tags: ["talk"],
+          bitrate: 128,
+        }),
+      ]);
+    const response = await GET(new Request("http://localhost/api/surprise?country=BF&mode=talk"));
+    const body = await response.json();
+    expect(response.status).toBe(200);
+    expect(body.station.id).toBe("rmc");
+    expect(body.widenedTo).toEqual({ language: "french" });
+    expect(search.mock.calls[1][0]).toMatchObject({ language: "french" });
+  });
+
+  it("still refuses when no language clearly speaks for the country", async () => {
+    // One relayed Quran channel must not make Arabic speak for a territory.
+    search.mockResolvedValueOnce([
+      makeStation("x", { countryCode: "TV", languages: ["arabic"], tags: ["pop"], bitrate: 128 }),
+      makeStation("y", { countryCode: "TV", tags: ["pop"], bitrate: 128 }),
+      makeStation("z", { countryCode: "TV", tags: ["pop"], bitrate: 128 }),
+    ]);
+    const response = await GET(new Request("http://localhost/api/surprise?country=TV&mode=talk"));
+    expect(response.status).toBe(404);
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(await response.json()).toMatchObject({ error: expect.stringContaining("No voices") });
+  });
+
+  it("does not widen when the listener asked for anything", async () => {
+    search.mockResolvedValueOnce([]);
+    const response = await GET(new Request("http://localhost/api/surprise?country=BF"));
+    expect(response.status).toBe(404);
+    expect(search).toHaveBeenCalledTimes(1);
+  });
+});

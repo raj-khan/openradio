@@ -18,6 +18,8 @@ import type { Station } from "@/lib/stations/types";
 export interface TuneResult {
   station: Station;
   alternates: Station[];
+  /** Set when the country asked for had none and the search widened. */
+  widenedTo?: { language: string };
 }
 
 interface TunerState {
@@ -25,6 +27,8 @@ interface TunerState {
   landed: Station | null;
   /** How many dead stations were stepped over to get here. */
   skipped: number;
+  /** Set when the station came from outside the country that was asked for. */
+  widenedTo: { language: string } | null;
   loading: boolean;
   error: string | null;
 }
@@ -33,6 +37,7 @@ export function useTuner() {
   const [state, setState] = useState<TunerState>({
     landed: null,
     skipped: 0,
+    widenedTo: null,
     loading: false,
     error: null,
   });
@@ -65,7 +70,7 @@ export function useTuner() {
       search: (mode: ReturnType<typeof useListeningMode.getState>["mode"]) => Promise<Response>,
       fallbackError: string,
     ) => {
-      setState({ landed: null, skipped: 0, loading: true, error: null });
+      setState({ landed: null, skipped: 0, widenedTo: null, loading: true, error: null });
       alternatesRef.current = [];
       try {
         const response = await search(useListeningMode.getState().mode);
@@ -73,11 +78,15 @@ export function useTuner() {
         if (!response.ok || !body.station) throw new Error(body.error ?? fallbackError);
         alternatesRef.current = body.alternates ?? [];
         play(body.station);
+        if (body.widenedTo) {
+          const widenedTo = body.widenedTo;
+          setState((prev) => ({ ...prev, widenedTo }));
+        }
       } catch (error) {
         // The server's own words when it has them: it knows whether a country
         // has no stations at all or none of the kind that was asked for.
         const message = error instanceof Error && error.message ? error.message : fallbackError;
-        setState({ landed: null, skipped: 0, loading: false, error: message });
+        setState({ landed: null, skipped: 0, widenedTo: null, loading: false, error: message });
         return;
       }
       setState((prev) => ({ ...prev, loading: false }));
