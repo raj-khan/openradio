@@ -206,8 +206,25 @@ export function minBitrateFor(station: Station): number {
   return isSpeechStation(station) ? MIN_SPEECH_BITRATE : MIN_MUSIC_BITRATE;
 }
 
+/*
+ * An unrecorded bitrate is not a bad one.
+ *
+ * The directory writes 0 when it has no bitrate on file, which normalizing
+ * turns into undefined. Reading that as 0 kbps failed the floor and dropped the
+ * station outright, and the gap is not small: of the live stations measured,
+ * 43% in Bangladesh, 45% in Egypt, 49% in India and 50% in Nigeria carry no
+ * bitrate at all. It fell hardest on exactly the stations this mode exists to
+ * find. Bangladesh has six speech stations and offered three, all because
+ * Radio Vivid Voice and Spice FM, both tagged talk, had nothing on file.
+ * Nigeria lost thirteen of eighteen the same way.
+ *
+ * So unknown passes, and the stream probe decides: it already rejects anything
+ * that does not answer, which is the thing a listener actually cares about. A
+ * bitrate that is on file and genuinely below the floor is still refused.
+ */
 export function meetsQualityFloor(station: Station): boolean {
-  return (station.bitrate ?? 0) >= minBitrateFor(station);
+  if (station.bitrate === undefined) return true;
+  return station.bitrate >= minBitrateFor(station);
 }
 
 /** Does this station suit what the listener asked for? */
