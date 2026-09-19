@@ -23,7 +23,8 @@ import type { Station } from "@/lib/stations/types";
 export function streamKey(url: string): string {
   try {
     const parsed = new URL(url);
-    const port = parsed.port && parsed.port !== "80" && parsed.port !== "443" ? `:${parsed.port}` : "";
+    const port =
+      parsed.port && parsed.port !== "80" && parsed.port !== "443" ? `:${parsed.port}` : "";
     const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
     const path = parsed.pathname.replace(/\/+$/, "");
     return `${host}${port}${path}${parsed.search}`;

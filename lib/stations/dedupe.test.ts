@@ -22,7 +22,9 @@ describe("streamKey", () => {
   });
 
   it("ignores www and a trailing slash", () => {
-    expect(streamKey("https://www.example.com/stream/")).toBe(streamKey("https://example.com/stream"));
+    expect(streamKey("https://www.example.com/stream/")).toBe(
+      streamKey("https://example.com/stream"),
+    );
   });
 
   it("ignores the default port but keeps a real one", () => {
@@ -72,7 +74,12 @@ describe("dedupeByStream", () => {
     // voices in Dhaka spent two attempts on the same silent stream.
     const stations = [
       station({ id: "1", name: "Jago FM 94.4", streamUrl: "http://139.59.86.99:12496/stream" }),
-      station({ id: "2", name: "Jago Fm", streamUrl: "http://139.59.86.99:12496/stream", tags: ["pop", "talk"] }),
+      station({
+        id: "2",
+        name: "Jago Fm",
+        streamUrl: "http://139.59.86.99:12496/stream",
+        tags: ["pop", "talk"],
+      }),
     ];
     const kept = dedupeByStream(stations);
     expect(kept).toHaveLength(1);
