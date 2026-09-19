@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { VisitTotal } from "@/components/analytics/visit-total";
+import { GithubIcon } from "@/components/icons/github";
 import { FOOTER_NAV } from "@/lib/navigation";
+import { REPO_URL } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -29,13 +31,19 @@ export function SiteFooter() {
                 {label}
               </Link>
             ))}
+            {/*
+             * Named GitHub rather than "Source": the mark and the name together
+             * say where the link goes before it is clicked, which "Source" did
+             * not. The label stays visible so it does not rely on the icon.
+             */}
             <a
-              href="https://github.com/raj-khan/openradio"
-              className="hover:text-text"
+              href={REPO_URL}
+              className="flex items-center gap-1.5 hover:text-text"
               rel="noopener noreferrer"
               target="_blank"
             >
-              Source
+              <GithubIcon className="size-4" />
+              GitHub
             </a>
           </nav>
         </div>
