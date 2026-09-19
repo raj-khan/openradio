@@ -157,6 +157,38 @@ describe("speech stations that are not tagged in English", () => {
     expect(nameSuggestsSpeech("Talkin' Blues"), "a blues show, not talk radio").toBe(false);
   });
 
+  it("recognises networks that broadcast nothing but speech", () => {
+    for (const name of ["Nigeria Info", "RFI Haoussa", "VOA Somali", "BBC World Service"]) {
+      expect(nameSuggestsSpeech(name), name).toBe(true);
+    }
+  });
+
+  it("does not claim a broadcaster that also runs music services", () => {
+    // The name alone cannot settle these, so they are left to their tags.
+    expect(nameSuggestsSpeech("BBC Radio 1"), "BBC Radio 1 is music").toBe(false);
+    expect(nameSuggestsSpeech("TRT Müzik"), "TRT runs a music service").toBe(false);
+  });
+
+  it("recognises Quran stations named after the reciter", () => {
+    // Egypt relays four of these with no tag, or tagged "classical".
+    for (const name of [
+      "Abdulbasit Abdulsamad",
+      "Muhammad Siddiq al-Minshawi",
+      "إذاعة مشاري العفاسي",
+      "إذاعة محمود خليل الحصري",
+    ]) {
+      expect(nameSuggestsSpeech(name), name).toBe(true);
+    }
+  });
+
+  it("reads a sports or info station as voices", () => {
+    expect(nameSuggestsSpeech("On sports FM")).toBe(true);
+    expect(nameSuggestsSpeech("France Info")).toBe(true);
+    // Whole words only, so these are untouched.
+    expect(nameSuggestsSpeech("Sportify Hits"), "not a sports station").toBe(false);
+    expect(nameSuggestsSpeech("Infinity FM"), "infinity is not info").toBe(false);
+  });
+
   it("does not pretend to catch every station", () => {
     // Cuba's Radio Reloj is a 24 hour news station that announces itself as a
     // clock. Nothing in its name or tags says news, and we do not guess.
