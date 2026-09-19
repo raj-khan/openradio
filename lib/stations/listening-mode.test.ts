@@ -57,6 +57,24 @@ describe("the quality floor", () => {
   it("does not let a floor of zero through", () => {
     expect(meetsQualityFloor(talk("a", 0))).toBe(false);
   });
+
+  it("lets a station through when no bitrate was ever recorded", () => {
+    // The directory writes 0 when it has nothing on file, which normalizing
+    // turns into undefined. Reading that as 0 kbps dropped 43% of Bangladesh's
+    // live stations and 50% of Nigeria's, including talk-tagged ones. Unknown
+    // is not bad: the stream probe decides whether it actually answers.
+    const unknown = makeStation("unknown", {
+      countryCode: "BD",
+      tags: ["talk"],
+      bitrate: undefined,
+    });
+    expect(meetsQualityFloor(unknown)).toBe(true);
+  });
+
+  it("still refuses a bitrate that is on file and below the floor", () => {
+    expect(meetsQualityFloor(music("a", 32))).toBe(false);
+    expect(meetsQualityFloor(talk("b", 16))).toBe(false);
+  });
 });
 
 describe("matchesMode", () => {
