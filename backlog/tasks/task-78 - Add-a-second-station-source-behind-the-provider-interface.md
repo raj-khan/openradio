@@ -1,9 +1,10 @@
 ---
 id: TASK-78
 title: Add a second station source behind the provider interface
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-19 03:08'
+updated_date: '2026-09-19 04:03'
 labels: []
 dependencies: []
 ordinal: 78000
@@ -23,3 +24,9 @@ getStationProvider already hides the directory behind one interface, so a second
 - [ ] #4 A CI job probes every seed stream and reports the dead ones
 - [ ] #5 Seeded with whatever Bangladeshi stations actually verify
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Rejected on evidence. See backlog/decisions/decision-2. No verifiable source of the missing Dhaka streams exists: Wikidata carries no stream URLs, and of eight Dhaka broadcasters sniffed in a real browser, streams are token-signed and expire in 60 seconds (Shadhin, Bhumi), answer 401 to third-party clients (Radio Today via zeno.fm), or are unreachable from outside the country (Radio Dhoni). Zero of eight gave a static address that answered a probe. fmstream.org and contributing back to Radio Browser were put to the owner as licensing and outward-facing decisions rather than decided here; the owner chose to drop the task.
+<!-- SECTION:NOTES:END -->
