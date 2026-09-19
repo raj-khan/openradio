@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "coverage-gap": "tsx scripts/coverage-gap.mts"
   },
   "dependencies": {
     "ai": "^7.0.105",
@@ -37,6 +38,7 @@
     "jsdom": "^30.1.0",
     "prettier": "^3.9.7",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5",
     "vitest": "^5.0.1"
   },

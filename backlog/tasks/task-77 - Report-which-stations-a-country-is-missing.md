@@ -1,9 +1,10 @@
 ---
 id: TASK-77
 title: Report which stations a country is missing
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-19 03:08'
+updated_date: '2026-09-19 03:43'
 labels: []
 dependencies: []
 ordinal: 77000
@@ -22,3 +23,15 @@ Radio Browser lists 26 stations for Bangladesh. Wikidata lists 23 Bangladeshi ra
 - [ ] #3 Output is committed for Bangladesh as the first worked example
 - [ ] #4 No runtime page depends on Wikidata
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Wikidata answers what exists: free, keyless, real SPARQL endpoint, queried by ISO code so it works for any country. It records no stream URLs, so it can never be a station source, and nothing on the site depends on it.
+
+Bangladesh, run 2026-09-19: directory carries 24, Wikidata knows 23, and 16 of those are not carried, including Radio Today, ABC Radio, Radio Capital, Radio Ekattor, Colours FM, Radio Aamar, Radio Dhoni, City FM and Radio Padma. Seven matched.
+
+Name matching is on the brand rather than the spelling, so 'Radio Today' matches 'Radio Today 89.6 FM' and 'DhakaFM 90.4' matches 'Dhaka FM'. The camel-case split was needed: glued together, the FM in DhakaFM is no longer a word and survived the decoration strip.
+
+Output committed to docs/coverage.md.
+<!-- SECTION:NOTES:END -->
