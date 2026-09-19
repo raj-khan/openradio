@@ -176,3 +176,44 @@ describe("widening a country that has nothing of the kind asked for", () => {
     expect(search).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("not landing on the station already playing", () => {
+  beforeEach(() => {
+    search.mockReset();
+    reachable.mockReset();
+    reachable.mockResolvedValue(true);
+  });
+
+  const talk = (id: string, name: string) =>
+    makeStation(id, { name, countryCode: "BD", tags: ["talk"], bitrate: 128 });
+
+  it("offers something else when told what is playing", async () => {
+    search.mockResolvedValue([talk("a", "First"), talk("b", "Second")]);
+    const response = await GET(
+      new Request("http://localhost/api/surprise?country=BD&mode=talk&heard=a"),
+    );
+    expect((await response.json()).station.id).toBe("b");
+  });
+
+  it("repeats rather than refusing when there is nothing else", async () => {
+    search.mockResolvedValue([talk("only", "Only One")]);
+    const response = await GET(
+      new Request("http://localhost/api/surprise?country=BD&mode=talk&heard=only"),
+    );
+    expect(response.status).toBe(200);
+    expect((await response.json()).station.id).toBe("only");
+  });
+
+  it("gives a brand filed twice a single place in the alternates", async () => {
+    search.mockResolvedValue([
+      talk("a", "AL-QURAN BANGLA"),
+      talk("b", "AL-QURAN BANGLA"),
+      talk("c", "Radio Vivid Voice"),
+    ]);
+    const body = await (
+      await GET(new Request("http://localhost/api/surprise?country=BD&mode=talk"))
+    ).json();
+    const names = [body.station, ...body.alternates].map((s: { name: string }) => s.name);
+    expect(new Set(names).size).toBe(names.length);
+  });
+});

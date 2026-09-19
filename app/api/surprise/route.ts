@@ -4,7 +4,7 @@ import { getStationProvider } from "@/lib/stations";
 import { dominantLanguage } from "@/lib/stations/languages";
 import { isListeningMode, MODE_LABELS, type ListeningMode } from "@/lib/stations/listening-mode";
 import { firstReachable } from "@/lib/stations/stream-probe";
-import { pickRandom, shuffle, surpriseCandidates } from "@/lib/stations/surprise";
+import { pickRandom, shuffle, spreadCandidates, surpriseCandidates } from "@/lib/stations/surprise";
 import { MAX_LIMIT, stationQuerySchema, type Station } from "@/lib/stations/types";
 
 const SURPRISE_POOL = 4000;
@@ -42,6 +42,8 @@ export async function GET(request: Request) {
   const country = wanted && /^[A-Z]{2}$/.test(wanted) ? wanted : undefined;
   const requested = params.get("mode");
   const mode: ListeningMode = isListeningMode(requested) ? requested : "any";
+  // What is playing now, so pressing again does not land on it a second time.
+  const heard = params.get("heard") ?? undefined;
 
   try {
     const stations = country
@@ -61,10 +63,13 @@ export async function GET(request: Request) {
 
     // Within one country the mode is a promise, not a preference: being handed
     // music after asking for voices hides the gap instead of reporting it.
-    let candidates = shuffle(
-      country
-        ? surpriseCandidates(stations, undefined, mode, false)
-        : surpriseCandidates(stations, exclude, mode),
+    let candidates = spreadCandidates(
+      shuffle(
+        country
+          ? surpriseCandidates(stations, undefined, mode, false)
+          : surpriseCandidates(stations, exclude, mode),
+      ),
+      heard,
     );
 
     /*
@@ -84,7 +89,7 @@ export async function GET(request: Request) {
         );
         const widened = surpriseCandidates(spoken, country, mode, false);
         if (widened.length > 0) {
-          candidates = shuffle(widened);
+          candidates = spreadCandidates(shuffle(widened), heard);
           widenedTo = { language };
         }
       }

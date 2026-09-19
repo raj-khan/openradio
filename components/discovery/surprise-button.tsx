@@ -15,11 +15,12 @@ export function SurpriseButton({ variant = "hero" }: SurpriseButtonProps) {
   const tuner = useTuner();
 
   const surprise = () =>
-    tuner.tune((mode) => {
+    tuner.tune(({ mode, heard }) => {
       const query = new URLSearchParams();
       const current = usePlayerStore.getState().station?.countryCode;
       if (current) query.set("not", current);
       if (mode !== "any") query.set("mode", mode);
+      if (heard) query.set("heard", heard);
       return fetch(`/api/surprise?${query}`, { cache: "no-store" });
     }, "Couldn't find a surprise right now. Try again.");
 

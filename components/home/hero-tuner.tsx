@@ -35,9 +35,10 @@ export function HeroTuner({ places, counts, countries }: HeroTunerProps) {
   const onAir = playing && currentCountry === place.countryCode;
 
   const tuneIn = () =>
-    tuner.tune((mode) => {
+    tuner.tune(({ mode, heard }) => {
       const query = new URLSearchParams({ country: place.countryCode });
       if (mode !== "any") query.set("mode", mode);
+      if (heard) query.set("heard", heard);
       // Same endpoint Surprise uses, so the dial gets the same reachability
       // check and the same list of alternates to fall back on.
       return fetch(`/api/surprise?${query}`, { cache: "no-store" });
