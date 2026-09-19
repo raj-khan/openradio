@@ -8,8 +8,10 @@ const ORIGIN = `http://127.0.0.1:${PORT}`;
 const station = (id, name, countrycode, country, tags, language = "") => ({
   stationuuid: id,
   name,
-  url: `${ORIGIN}/stream.wav`,
-  url_resolved: `${ORIGIN}/stream.wav`,
+  // Each station gets its own stream: real ones do, and entries that share a
+  // stream are deliberately collapsed as duplicates of each other.
+  url: `${ORIGIN}/stream/${id}.wav`,
+  url_resolved: `${ORIGIN}/stream/${id}.wav`,
   homepage: "https://example.com/",
   favicon: "",
   country,
@@ -129,7 +131,7 @@ function search(params) {
 createServer((req, res) => {
   const url = new URL(req.url, ORIGIN);
   const path = url.pathname;
-  if (path === "/stream.wav") {
+  if (path.startsWith("/stream/") && path.endsWith(".wav")) {
     res.writeHead(200, {
       "content-type": "audio/wav",
       "content-length": WAV.length,
