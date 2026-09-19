@@ -161,6 +161,36 @@ const SPEECH_NAME_WORDS = [
   "bible",
   "sermon",
   "gebet",
+  // Formats that are speech whatever else the name says. "info" is how French
+  // and West African networks label a news service (France Info, Nigeria Info),
+  // and a sports station is commentary and phone-ins rather than records.
+  "info",
+  "sport",
+  "sports",
+  // Networks that broadcast nothing but speech, so the name alone settles it.
+  // Deliberately excludes broadcasters with music services under the same name:
+  // "bbc" would wrongly claim Radio 1 and 6 Music, "trt" would claim TRT Müzik.
+  "voa",
+  "rfi",
+  "npr",
+  "world service",
+  "al jazeera",
+  "aljazeera",
+  "vaticana",
+  // Quran recitation stations are named after the reciter and tagged with
+  // nothing, or with "classical". Egypt alone relays four of these untagged.
+  "abdulbasit",
+  "abdul basit",
+  "minshawi",
+  "husary",
+  "hussary",
+  "alafasy",
+  "afasy",
+  "sudais",
+  "shuraim",
+  "dossari",
+  "ghamdi",
+  "ajmi",
 ];
 
 /** Words that only make sense as whole tokens in a Latin-script name. */
@@ -180,6 +210,15 @@ const SPEECH_NAME_SUBSTRINGS = [
   "খবর",
   "뉴스",
   "ニュース",
+  // Reciters again, in the script their own stations are named in.
+  "الحصري",
+  "العفاسي",
+  "المنشاوي",
+  "عبد الباسط",
+  "مصطفى إسماعيل",
+  "الدوسري",
+  "السديس",
+  "الشريم",
 ];
 
 export function nameSuggestsSpeech(name: string): boolean {
