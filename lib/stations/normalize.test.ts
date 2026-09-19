@@ -115,6 +115,17 @@ describe("normalizeStations", () => {
   it("returns an empty list for non arrays", () => {
     expect(normalizeStations({})).toEqual([]);
   });
+
+  it("collapses separate entries that carry the same stream", () => {
+    // Different ids and names, one stream: the directory is community edited
+    // and the same station is often filed twice.
+    const list = normalizeStations([
+      { ...base, stationuuid: "a", name: "Jago FM 94.4", tags: "" },
+      { ...base, stationuuid: "b", name: "Jago Fm", tags: "pop,talk" },
+    ]);
+    expect(list).toHaveLength(1);
+    expect(list[0].name).toBe("Jago Fm");
+  });
 });
 
 describe("splitList", () => {

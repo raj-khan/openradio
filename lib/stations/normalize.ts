@@ -1,3 +1,4 @@
+import { dedupeByStream } from "@/lib/stations/dedupe";
 import type { Facet, Station } from "@/lib/stations/types";
 
 /** Subset of the Radio Browser station JSON we rely on. Every field may be missing. */
@@ -135,7 +136,7 @@ export function normalizeStation(raw: RawRadioBrowserStation): Station | null {
   };
 }
 
-/** Normalize a list, dropping unusable entries and duplicate ids. */
+/** Normalize a list, dropping unusable entries, duplicate ids and duplicate streams. */
 export function normalizeStations(raw: unknown): Station[] {
   if (!Array.isArray(raw)) return [];
   const seen = new Set<string>();
@@ -148,7 +149,7 @@ export function normalizeStations(raw: unknown): Station[] {
       stations.push(station);
     }
   }
-  return stations;
+  return dedupeByStream(stations);
 }
 
 /** Normalize facet lists (countries, languages, tags), sorted by station count. */
