@@ -12,8 +12,8 @@ Live radio from every country, language and genre, in one free and open-source p
 [![License: MIT](https://img.shields.io/badge/License-MIT-ff5a2c.svg)](LICENSE)
 
 <!-- <img src="docs/screenshots/home.webp" alt="OpenRadio home page: a photo of Tokyo at night behind a tuning dial with cities along it" width="900"> -->
-[openradio-promo.webm](https://github.com/user-attachments/assets/35633b56-2a41-4809-92d2-818328d55cf8)
 
+[openradio-promo.webm](https://github.com/user-attachments/assets/35633b56-2a41-4809-92d2-818328d55cf8)
 
 </div>
 
