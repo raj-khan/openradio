@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { NOW_PLAYING_INTERVAL_MS, shouldPoll, useNowPlayingStore } from "@/lib/now-playing/store";
+import { nowPlayingDelay, shouldPoll, useNowPlayingStore } from "@/lib/now-playing/store";
 import { usePlayerStore } from "@/lib/player/store";
 
 /** Polls the now playing API for the current station while it plays. */
@@ -20,6 +20,18 @@ export function NowPlayingPoller() {
   useEffect(() => {
     if (!active || !stationId) return;
     let controller: AbortController | null = null;
+    let timer = 0;
+    let stopped = false;
+
+    /*
+     * A rescheduling timeout rather than an interval, so the gap is chosen
+     * fresh each time from the tab's current visibility. An interval would be
+     * stuck with whichever cadence applied when the station started playing.
+     */
+    const schedule = () => {
+      if (stopped) return;
+      timer = window.setTimeout(run, nowPlayingDelay(document.hidden));
+    };
 
     const poll = async () => {
       controller?.abort();
@@ -36,10 +48,25 @@ export function NowPlayingPoller() {
       }
     };
 
-    void poll();
-    const timer = window.setInterval(poll, NOW_PLAYING_INTERVAL_MS);
+    const run = async () => {
+      await poll();
+      schedule();
+    };
+
+    // Coming back to the tab should show the current title, not the one from
+    // whenever the slow hidden cadence last happened to fire.
+    const onVisible = () => {
+      if (document.hidden) return;
+      window.clearTimeout(timer);
+      void run();
+    };
+
+    void run();
+    document.addEventListener("visibilitychange", onVisible);
     return () => {
-      window.clearInterval(timer);
+      stopped = true;
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisible);
       controller?.abort();
     };
   }, [active, stationId]);
