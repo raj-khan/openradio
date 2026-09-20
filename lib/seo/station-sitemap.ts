@@ -15,10 +15,16 @@ import type { Station } from "@/lib/stations/types";
  * How many station pages go in the sitemap.
  *
  * Not a protocol limit (that is 50,000 per file, so this still fits in one).
- * It is a fetch budget: the directory caps a page at 100 stations, so every
- * thousand here is ten requests each time the sitemap is rebuilt.
+ * It is a serving budget twice over. The directory caps a page at 100
+ * stations, so every thousand here is ten requests each time the sitemap is
+ * rebuilt. More to the point, a station page is rendered per request (the CSP
+ * nonce rules out caching it), and robots.txt welcomes every named AI crawler
+ * alongside the search ones, so each thousand listed here is a thousand
+ * renders every time any of them makes a pass. The list is ranked by clicks
+ * and votes, so a lower cap sheds the tail that was drawing least and keeps
+ * the stations people actually look for.
  */
-export const MAX_SITEMAP_STATIONS = 2000;
+export const MAX_SITEMAP_STATIONS = 600;
 
 /** A station page only earns a place if it has something on it worth reading. */
 export function isIndexable(station: Station): boolean {

@@ -56,11 +56,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Station pages rank below the browse pages that link to them: there are far
-  // more of them and each one is about a single station.
+  // more of them and each one is about a single station. Monthly rather than
+  // weekly because a station's name, country and tags rarely move, and each
+  // revisit is a fresh render: asking for a weekly sweep was paying for that
+  // four times as often as the page earned.
   for (const station of stationSitemapEntries(stations)) {
     entries.push({
       url: new URL(station.path, base).toString(),
-      changeFrequency: "weekly",
+      changeFrequency: "monthly",
       priority: 0.5,
       ...(station.lastModified ? { lastModified: station.lastModified } : {}),
     });
