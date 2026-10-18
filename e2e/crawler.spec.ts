@@ -74,9 +74,12 @@ test("every page describes itself to a crawler in structured data", async ({ req
 
 test("the machine-readable files are served", async ({ request }) => {
   const robots = await fetchAsCrawler(request, "/robots.txt");
-  expect(robots).toContain("User-Agent: GPTBot");
-  expect(robots).toContain("User-Agent: ClaudeBot");
+  expect(robots).toContain("User-Agent: ChatGPT-User");
+  expect(robots).toContain("User-Agent: Claude-User");
   expect(robots).toContain("Disallow: /api/");
+  // The bulk collectors are named in order to be refused, not invited.
+  expect(robots).toMatch(/User-Agent: GPTBot\nDisallow: \/$/m);
+  expect(robots).toMatch(/User-Agent: CCBot\nDisallow: \/$/m);
   expect(robots).toMatch(/Sitemap: https?:\/\/\S+\/sitemap\.xml/);
 
   const llms = await fetchAsCrawler(request, "/llms.txt");
