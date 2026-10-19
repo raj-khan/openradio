@@ -16,6 +16,25 @@ import { breadcrumbJsonLd, stationJsonLd } from "@/lib/seo/structured-data";
 import { countryFlag, countryName, primaryTag } from "@/lib/stations/display";
 import { loadSimilarStations, loadStation } from "@/lib/stations/server-data";
 
+/*
+ * Deliberately empty. Prerendering the popular stations at build time would
+ * mean a slow build and a wave of upstream requests on every deploy, and they
+ * are cheap to make on demand. What matters is declaring the function at all:
+ * a dynamic segment without one is rendered fresh for every single request,
+ * which is the whole reason this page could never be cached.
+ */
+export async function generateStaticParams() {
+  return [];
+}
+
+/*
+ * A station's name, country and tags rarely move, and this is the most crawled
+ * page on the site. An hour is a ceiling rather than the real window: the
+ * directory fetches underneath ask for 600 seconds and the shortest wins, so
+ * in practice these rebuild every ten minutes.
+ */
+export const revalidate = 3_600;
+
 export async function generateMetadata({ params }: PageProps<"/station/[id]">): Promise<Metadata> {
   const { id } = await params;
   const result = await loadStation(id);

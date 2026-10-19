@@ -7,6 +7,14 @@ import { pageMetadata } from "@/lib/seo/page-metadata";
 import { parseCountrySegment } from "@/lib/stations/browse";
 import { countryFlag, countryName } from "@/lib/stations/display";
 
+/* Empty for the same reason as the station pages: cached on first visit, not at build. */
+export async function generateStaticParams() {
+  return [];
+}
+
+/** Ordered by popularity, which shifts over days rather than minutes. */
+export const revalidate = 3_600;
+
 export async function generateMetadata({
   params,
 }: PageProps<"/country/[code]">): Promise<Metadata> {

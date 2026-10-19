@@ -30,6 +30,14 @@ const loadCombo = cache(async (combo: Combo) => {
   return result.ok ? result.data : [];
 });
 
+/* Empty for the same reason as the station pages: cached on first visit, not at build. */
+export async function generateStaticParams() {
+  return [];
+}
+
+/** A country and genre pairing only changes when the stations behind it do. */
+export const revalidate = 3_600;
+
 export async function generateMetadata({ params }: PageProps<"/[slug]">): Promise<Metadata> {
   const combo = parseComboSlug((await params).slug);
   if (!combo) return { title: "Off the dial" };

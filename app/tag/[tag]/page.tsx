@@ -5,6 +5,18 @@ import { HERO_IMAGE, MOODS, moodForTag } from "@/lib/imagery/catalog";
 import { pageMetadata } from "@/lib/seo/page-metadata";
 import { parseTermSegment, titleCase } from "@/lib/stations/browse";
 
+/*
+ * Nothing is prerendered at build: the list of genres is large and the pages
+ * are cheap to make on demand. Declaring the function at all is what matters,
+ * because a dynamic segment without one is rendered fresh for every request.
+ */
+export async function generateStaticParams() {
+  return [];
+}
+
+/** Changes when stations are added to the genre, which is not an hourly event. */
+export const revalidate = 3_600;
+
 export async function generateMetadata({ params }: PageProps<"/tag/[tag]">): Promise<Metadata> {
   const tag = parseTermSegment((await params).tag);
   if (!tag) return { title: "Off the dial" };

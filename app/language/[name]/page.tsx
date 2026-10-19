@@ -5,6 +5,14 @@ import { HERO_IMAGE } from "@/lib/imagery/catalog";
 import { pageMetadata } from "@/lib/seo/page-metadata";
 import { parseTermSegment, titleCase } from "@/lib/stations/browse";
 
+/* Empty for the same reason as the station pages: cached on first visit, not at build. */
+export async function generateStaticParams() {
+  return [];
+}
+
+/** Same popularity ordering as the country pages, and it moves just as slowly. */
+export const revalidate = 3_600;
+
 export async function generateMetadata({
   params,
 }: PageProps<"/language/[name]">): Promise<Metadata> {
