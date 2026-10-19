@@ -41,7 +41,10 @@ async function resolveMirrors(): Promise<string[]> {
     const response = await fetch(MIRROR_LIST_URL, {
       headers: { "User-Agent": USER_AGENT },
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-      cache: "no-store",
+      // Cached for the same hour the in-process mirrorCache above holds it, and
+      // not with no-store, which would be a lie about how often we want it and
+      // would opt every page that loads a station into rendering on demand.
+      next: { revalidate: MIRROR_TTL_MS / 1000 },
     });
     if (response.ok) {
       const body: unknown = await response.json();
