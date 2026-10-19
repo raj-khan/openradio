@@ -9,11 +9,22 @@ const directive = (csp: string, name: string) =>
     .slice(1);
 
 describe("buildCsp", () => {
-  const csp = buildCsp("abc123");
+  const csp = buildCsp();
 
-  it("locks scripts to self and the nonce", () => {
-    expect(directive(csp, "script-src")).toEqual(["'self'", "'nonce-abc123'", "'strict-dynamic'"]);
+  it("carries no nonce, so the policy can be a static header", () => {
+    // A nonce has to be minted per request and injected while rendering, which
+    // would mean no page in the app could ever be prerendered or cached.
+    expect(csp).not.toContain("nonce-");
+    expect(csp).not.toContain("strict-dynamic");
     expect(csp).not.toContain("unsafe-eval");
+  });
+
+  it("allows inline scripts, which is what the nonce used to cover", () => {
+    expect(directive(csp, "script-src")).toContain("'unsafe-inline'");
+  });
+
+  it("names the analytics host, now that strict-dynamic is not there to allow it", () => {
+    expect(directive(csp, "script-src")).toContain("https://www.googletagmanager.com");
   });
 
   it("allows external station media and HLS segments", () => {
@@ -38,7 +49,7 @@ describe("buildCsp", () => {
   });
 
   it("adds dev-only allowances", () => {
-    const dev = buildCsp("x", { dev: true });
+    const dev = buildCsp({ dev: true });
     expect(directive(dev, "script-src")).toContain("'unsafe-eval'");
     expect(directive(dev, "connect-src")).toContain("ws:");
   });

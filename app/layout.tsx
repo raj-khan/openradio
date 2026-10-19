@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { connection } from "next/server";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { AudioEngine } from "@/components/player/audio-engine";
 import { LibraryHydrator } from "@/components/library/library-hydrator";
@@ -89,9 +88,6 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  // Pages render per request so the CSP nonce from proxy.ts can be applied to scripts.
-  await connection();
-
   return (
     <html
       lang="en"
